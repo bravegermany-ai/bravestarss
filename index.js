@@ -1,10 +1,10 @@
 import { Telegraf, Markup } from "telegraf";
 
-const bot = new Telegraf(process.env.8320888074:AAEmaJK8bhyVUaS_MOVTfCvshMImAYE18uM);
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.start((ctx) => {
   ctx.reply(
-    "⭐ Willkommen! Klicke zum Bezahlen:",
+    "⭐ Willkommen! Klicke auf den Button um mit Telegram Stars zu zahlen:",
     Markup.inlineKeyboard([
       Markup.button.pay("⭐ 10 Stars zahlen")
     ])
@@ -27,3 +27,4 @@ bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 bot.on("successful_payment", (ctx) => ctx.reply("✅ Zahlung erfolgreich!"));
 
 bot.launch();
+
