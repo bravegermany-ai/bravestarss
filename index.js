@@ -26,5 +26,6 @@ bot.on("callback_query", async (ctx) => {
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 bot.on("successful_payment", (ctx) => ctx.reply("✅ Zahlung erfolgreich!"));
 
-bot.launch();
+bot.launch({ dropPendingUpdates: true });
+
 
