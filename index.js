@@ -2,8 +2,8 @@ import { Telegraf } from "telegraf";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.start((ctx) => {
-  ctx.reply("✅ Bot lebt!");
+bot.use((ctx) => {
+  ctx.reply("✅ Ich empfange Nachrichten");
 });
 
 bot.launch({ dropPendingUpdates: true });
