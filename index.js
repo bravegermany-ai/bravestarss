@@ -6,26 +6,28 @@ bot.start((ctx) => {
   ctx.reply(
     "⭐ Willkommen! Klicke auf den Button um mit Telegram Stars zu zahlen:",
     Markup.inlineKeyboard([
-      Markup.button.pay("⭐ 10 Stars zahlen")
+      Markup.button.callback("⭐ 10 Stars kaufen", "BUY_10")
     ])
   );
 });
 
-bot.on("callback_query", async (ctx) => {
+bot.action("BUY_10", async (ctx) => {
   await ctx.answerCbQuery();
+
   await ctx.replyWithInvoice({
-    title: "Premium Feature",
-    description: "Zugriff freischalten",
-    payload: "premium_10",
-    provider_token: "",
+    title: "⭐ 10 Telegram Stars",
+    description: "Premium freischalten",
+    payload: "stars_10",
+    provider_token: "", // bei Stars IMMER leer
     currency: "XTR",
-    prices: [{ label: "Premium", amount: 10 }]
+    prices: [{ label: "10 Stars", amount: 10 }]
   });
 });
 
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
-bot.on("successful_payment", (ctx) => ctx.reply("✅ Zahlung erfolgreich!"));
+
+bot.on("successful_payment", (ctx) => {
+  ctx.reply("✅ Zahlung erfolgreich! Danke ⭐");
+});
 
 bot.launch({ dropPendingUpdates: true });
-
-
