@@ -2,65 +2,35 @@ import { Telegraf, Markup } from "telegraf";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-/* /start */
-bot.start((ctx) => {
-  const userName = ctx.from.first_name || "User";
+// /start
+bot.start(async (ctx) => {
+  const name = ctx.from.first_name || "User";
 
-  ctx.reply(
-    `👋 Willkommen bei BRAVE, ${userName}!`,
+  await ctx.reply(
+    `👋 Willkommen bei BRAVE, ${name}!\n\n⭐ Pakete (Zahlung über Telegram Stars):`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ VIP – 1.250 Stars", "VIP_1250")],
-      [Markup.button.callback("⭐ Ultra – 2.500 Stars", "ULTRA_2500")],
-      [Markup.button.callback("⭐ Ultra Pro – 5.000 Stars", "ULTRAPRO_5000")]
+      [Markup.button.pay("⭐ VIP – 250 Stars (≈ 5,39 €)")],
+      [Markup.button.pay("⭐ Ultra – 500 Stars (≈ 10,79 €)")],
+      [Markup.button.pay("⭐ Pro – 1.000 Stars (≈ 21,99 €)")],
+      [Markup.button.pay("⭐ Elite – 2.500 Stars (≈ 53,99 €)")],
+      [Markup.button.pay("⭐ Supreme – 5.000 Stars (≈ 109 €)")],
+      [Markup.button.pay("⭐ Ultimate – 10.000 Stars (≈ 219 €)")]
     ])
   );
 });
 
-/* VIP */
-bot.action("VIP_1250", async (ctx) => {
-  await ctx.answerCbQuery();
-  await ctx.replyWithInvoice({
-    title: "⭐ VIP Paket",
-    description: "VIP Zugang bei BRAVE",
-    payload: "vip_1250",
-    provider_token: "",
-    currency: "XTR",
-    prices: [{ label: "VIP – 1.250 Stars", amount: 1250 }]
-  });
+// Checkout bestätigen
+bot.on("pre_checkout_query", (ctx) => {
+  ctx.answerPreCheckoutQuery(true);
 });
 
-/* ULTRA */
-bot.action("ULTRA_2500", async (ctx) => {
-  await ctx.answerCbQuery();
-  await ctx.replyWithInvoice({
-    title: "⭐ Ultra Paket",
-    description: "Ultra Zugang bei BRAVE",
-    payload: "ultra_2500",
-    provider_token: "",
-    currency: "XTR",
-    prices: [{ label: "Ultra – 2.500 Stars", amount: 2500 }]
-  });
-});
+// Zahlung erfolgreich
+bot.on("successful_payment", async (ctx) => {
+  const stars = ctx.message.successful_payment.total_amount;
 
-/* ULTRA PRO */
-bot.action("ULTRAPRO_5000", async (ctx) => {
-  await ctx.answerCbQuery();
-  await ctx.replyWithInvoice({
-    title: "⭐ Ultra Pro Paket",
-    description: "Ultra Pro Zugang bei BRAVE",
-    payload: "ultrapro_5000",
-    provider_token: "",
-    currency: "XTR",
-    prices: [{ label: "Ultra Pro – 5.000 Stars", amount: 5000 }]
-  });
-});
-
-/* Checkout bestätigen */
-bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
-
-/* Zahlung erfolgreich */
-bot.on("successful_payment", (ctx) => {
-  ctx.reply("✅ Zahlung erfolgreich! Willkommen bei BRAVE 🚀");
+  await ctx.reply(
+    `✅ Zahlung erfolgreich!\n\n⭐ Du hast ${stars} Stars bezahlt.\n🔥 Danke für deinen Support!`
+  );
 });
 
 bot.launch({ dropPendingUpdates: true });
