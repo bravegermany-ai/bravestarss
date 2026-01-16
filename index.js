@@ -2,50 +2,65 @@ import { Telegraf, Markup } from "telegraf";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// START
+/* /start */
 bot.start((ctx) => {
-  const name = ctx.from.first_name || "User";
+  const userName = ctx.from.first_name || "User";
 
   ctx.reply(
-    `👋 Willkommen bei BRAVE, ${name}!\n\n⭐ Wähle dein Paket:`,
+    `👋 Willkommen bei BRAVE, ${userName}!`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ 250 Stars (≈ 5,39 €)", "S250")],
-      [Markup.button.callback("⭐ 500 Stars (≈ 10,79 €)", "S500")],
-      [Markup.button.callback("⭐ 1.000 Stars (≈ 21,99 €)", "S1000")],
-      [Markup.button.callback("⭐ 2.500 Stars (≈ 53,99 €)", "S2500")],
-      [Markup.button.callback("⭐ 5.000 Stars (≈ 109 €)", "S5000")],
-      [Markup.button.callback("⭐ 10.000 Stars (≈ 219 €)", "S10000")]
+      [Markup.button.callback("⭐ VIP – 1.250 Stars", "VIP_1250")],
+      [Markup.button.callback("⭐ Ultra – 2.500 Stars", "ULTRA_2500")],
+      [Markup.button.callback("⭐ Ultra Pro – 5.000 Stars", "ULTRAPRO_5000")]
     ])
   );
 });
 
-// PAYMENT HANDLER
-const sendInvoice = (ctx, stars, label) => {
-  return ctx.replyWithInvoice({
-    title: "⭐ BRAVE Stars",
-    description: label,
-    payload: `stars_${stars}`,
+/* VIP */
+bot.action("VIP_1250", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.replyWithInvoice({
+    title: "⭐ VIP Paket",
+    description: "VIP Zugang bei BRAVE",
+    payload: "vip_1250",
     provider_token: "",
     currency: "XTR",
-    prices: [{ label, amount: stars }]
+    prices: [{ label: "VIP – 1.250 Stars", amount: 1250 }]
   });
-};
+});
 
-bot.action("S250", (ctx) => sendInvoice(ctx, 250, "250 Stars"));
-bot.action("S500", (ctx) => sendInvoice(ctx, 500, "500 Stars"));
-bot.action("S1000", (ctx) => sendInvoice(ctx, 1000, "1.000 Stars"));
-bot.action("S2500", (ctx) => sendInvoice(ctx, 2500, "2.500 Stars"));
-bot.action("S5000", (ctx) => sendInvoice(ctx, 5000, "5.000 Stars"));
-bot.action("S10000", (ctx) => sendInvoice(ctx, 10000, "10.000 Stars"));
+/* ULTRA */
+bot.action("ULTRA_2500", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.replyWithInvoice({
+    title: "⭐ Ultra Paket",
+    description: "Ultra Zugang bei BRAVE",
+    payload: "ultra_2500",
+    provider_token: "",
+    currency: "XTR",
+    prices: [{ label: "Ultra – 2.500 Stars", amount: 2500 }]
+  });
+});
 
-// CHECKOUT
+/* ULTRA PRO */
+bot.action("ULTRAPRO_5000", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.replyWithInvoice({
+    title: "⭐ Ultra Pro Paket",
+    description: "Ultra Pro Zugang bei BRAVE",
+    payload: "ultrapro_5000",
+    provider_token: "",
+    currency: "XTR",
+    prices: [{ label: "Ultra Pro – 5.000 Stars", amount: 5000 }]
+  });
+});
+
+/* Checkout bestätigen */
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
-// SUCCESS
+/* Zahlung erfolgreich */
 bot.on("successful_payment", (ctx) => {
-  const stars = ctx.message.successful_payment.total_amount;
-  ctx.reply(`✅ Zahlung erfolgreich!\n⭐ ${stars} Stars erhalten`);
+  ctx.reply("✅ Zahlung erfolgreich! Willkommen bei BRAVE 🚀");
 });
 
 bot.launch({ dropPendingUpdates: true });
-console.log("BOT STARTET");
