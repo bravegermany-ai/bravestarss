@@ -89,8 +89,7 @@ bot.start((ctx) => {
     Markup.inlineKeyboard([
       [Markup.button.callback("🥇 Gold – 25 € ⭐️", "PRICE_GOLD")],
       [Markup.button.callback("💠 Platin – 50 € ⭐️", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")],
-      [Markup.button.callback("⭐️ 4.000 Stars – Direktkauf", "BUY_4000")]
+      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
     ])
   );
 });
@@ -115,11 +114,12 @@ bot.action(/PRICE_(.+)/, async (ctx) => {
 });
 
 /* =========================
-   BUY PAKETE
+   ZAHLUNG
 ========================= */
-bot.action(/BUY_(GOLD|PLATIN|DIAMOND)/, async (ctx) => {
+bot.action(/BUY_(.+)/, async (ctx) => {
   const key = ctx.match[1];
   const pkg = PACKAGES[key];
+  if (!pkg) return;
 
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
 
@@ -127,25 +127,9 @@ bot.action(/BUY_(GOLD|PLATIN|DIAMOND)/, async (ctx) => {
     title: pkg.name,
     description: `BRAVE VIP – ${pkg.name}`,
     payload: `${key}_${ctx.from.id}`,
-    provider_token: "", // BOTFATHER TOKEN
+    provider_token: "", // BOTFATHER PAYMENT TOKEN
     currency: "XTR",
     prices: [{ label: pkg.name, amount: pkg.stars }]
-  });
-});
-
-/* =========================
-   BUY 4.000 STARS
-========================= */
-bot.action("BUY_4000", async (ctx) => {
-  await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
-
-  return ctx.replyWithInvoice({
-    title: "4.000 Stars",
-    description: "Direktkauf – 4.000 Telegram Stars",
-    payload: `STARS_4000_${ctx.from.id}`,
-    provider_token: "", // BOTFATHER TOKEN
-    currency: "XTR",
-    prices: [{ label: "4.000 Stars", amount: 4000 }]
   });
 });
 
@@ -159,8 +143,7 @@ bot.action("BACK", (ctx) => {
     Markup.inlineKeyboard([
       [Markup.button.callback("🥇 Gold – 25 € ⭐️", "PRICE_GOLD")],
       [Markup.button.callback("💠 Platin – 50 € ⭐️", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")],
-      [Markup.button.callback("⭐️ 4.000 Stars – Direktkauf", "BUY_4000")]
+      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
     ])
   );
 });
