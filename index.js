@@ -10,74 +10,68 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
    PAKETE
 ========================= */
 const PACKAGES = {
-  GOLD: {
-    name: "Gold VIP",
+  BASIC: {
+    name: "Basic VIP",
     stars: 1000,
     info: `
-🥇 GOLD VIP – 21,49 €
+⭐ BASIC VIP – 25 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
 500 Videos & Bilder
 ━━━━━━━━━━━━━━━━━━
 
-✨ Tägliche Updates
+✨ Tägliche Updates  
+🔥 Standard & Premium Inhalte  
+⭐ OnlyFans Zugang  
+🎥 HD / 4K Videos  
+⚡ Standard Support  
 
-💎 Premium Inhalte  
-🔥 OnlyFans Zugang  
-⭐ Influencer Zugang  
-📲 Social Media Leaks  
-🎥 4K Video Qualität  
-⚡ Priority Support
-
-🔥 BELIEBT
+Perfekt für Einsteiger.
 `
   },
-  PLATIN: {
-    name: "Platin VIP",
+  PRO: {
+    name: "Pro VIP",
     stars: 2500,
     info: `
-💠 PLATIN VIP – 53,90 €
+⭐⭐ PRO VIP – 50 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
 1.500 Videos & Bilder
 ━━━━━━━━━━━━━━━━━━
 
-✨ Tägliche Updates
-
-💎 Exklusive Premium Inhalte  
-🔥 OnlyFans & Influencer Zugang  
+✨ Tägliche Updates  
+🔥 Premium & exklusive Inhalte  
+⭐ OnlyFans & Influencer Zugang  
 📲 Social Media Leaks  
 ⬇️ Download-Funktion  
-🚫 Keine Wasserzeichen  
-🎥 4K Video Qualität  
-⚡ Priority Support
+🎥 4K Videos  
+⚡ Priority Support  
 
-💠 MEHR POWER
+🔥 AM BELIEBTESTEN
 `
   },
-  DIAMOND: {
-    name: "Diamond VIP",
+  ULTRA: {
+    name: "Ultra VIP",
     stars: 5000,
     info: `
-💎 DIAMOND VIP – 106,99 €
+⭐⭐⭐ ULTRA VIP – 100 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
 5.000 Videos & Bilder
 ━━━━━━━━━━━━━━━━━━
 
-✨ Tägliche Updates
-
+✨ Tägliche Updates  
+🔓 Vollzugriff auf Inhalte  
 ⬇️ Download-Funktion  
 🚫 Keine Wasserzeichen  
-🔥 OnlyFans & Influencer Zugang  
+⭐ OnlyFans & Influencer Zugang  
 📲 Social Media Leaks  
 💬 Live-Chat Zugriff  
-🗳 Votings & Mitbestimmung  
-🎥 4K Video Qualität  
-⚡ Priority Support
+🎥 4K Videos  
+⚡ Priority Support  
 
 💎 MAXIMAL
 `
@@ -89,11 +83,11 @@ const PACKAGES = {
 ========================= */
 bot.start((ctx) => {
   ctx.reply(
-    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle dein Paket:",
+    "🔥 BRAVE VIP 🔥\n\nWähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold – 21,49 € ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin – 53,90 € ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 106,99 € ⭐", "PRICE_DIAMOND")]
+      [Markup.button.callback("⭐ Basic – 25 €", "PRICE_BASIC")],
+      [Markup.button.callback("⭐⭐ Pro – 50 €", "PRICE_PRO")],
+      [Markup.button.callback("⭐⭐⭐ Ultra – 100 €", "PRICE_ULTRA")]
     ])
   );
 });
@@ -112,7 +106,7 @@ bot.action(/PRICE_(.+)/, async (ctx) => {
     pkg.info,
     Markup.inlineKeyboard([
       [Markup.button.callback("🛒 JETZT KAUFEN ⭐", `BUY_${key}`)],
-      [Markup.button.callback("⬅️ Zurück ⭐", "BACK")]
+      [Markup.button.callback("⬅️ Zurück", "BACK")]
     ])
   );
 });
@@ -143,11 +137,11 @@ bot.action(/BUY_(.+)/, async (ctx) => {
 bot.action("BACK", (ctx) => {
   ctx.answerCbQuery();
   ctx.reply(
-    "🚀 Wähle dein Paket:",
+    "Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold – 21,49 € ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin – 53,90 € ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 106,99 € ⭐", "PRICE_DIAMOND")]
+      [Markup.button.callback("⭐ Basic – 25 €", "PRICE_BASIC")],
+      [Markup.button.callback("⭐⭐ Pro – 50 €", "PRICE_PRO")],
+      [Markup.button.callback("⭐⭐⭐ Ultra – 100 €", "PRICE_ULTRA")]
     ])
   );
 });
