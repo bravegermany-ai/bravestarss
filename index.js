@@ -10,70 +10,68 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
    PAKETE
 ========================= */
 const PACKAGES = {
-  BASIC: {
-    name: "Basic VIP",
+  GOLD: {
+    name: "Gold VIP",
     stars: 1000,
     info: `
-⭐ BASIC VIP – 25 €
+Gold VIP – 25 €
 
-━━━━━━━━━━━━━━━━━━
-📦 INHALTE
+-------------------------
+INHALTE
 500 Videos & Bilder
-━━━━━━━━━━━━━━━━━━
+-------------------------
 
-✨ Tägliche Updates  
-🔥 Standard & Premium Inhalte  
-⭐ OnlyFans Zugang  
-🎥 HD / 4K Videos  
-⚡ Standard Support  
+Tägliche Updates
 
-Perfekt für Einsteiger.
+OnlyFans Zugang
+Influencer Inhalte
+Social Media Leaks
+4K Video Qualität
+Standard Support
 `
   },
-  PRO: {
-    name: "Pro VIP",
+  PLATIN: {
+    name: "Platin VIP",
     stars: 2500,
     info: `
-⭐⭐ PRO VIP – 50 €
+Platin VIP – 50 €
 
-━━━━━━━━━━━━━━━━━━
-📦 INHALTE
+-------------------------
+INHALTE
 1.500 Videos & Bilder
-━━━━━━━━━━━━━━━━━━
+-------------------------
 
-✨ Tägliche Updates  
-🔥 Premium & exklusive Inhalte  
-⭐ OnlyFans & Influencer Zugang  
-📲 Social Media Leaks  
-⬇️ Download-Funktion  
-🎥 4K Videos  
-⚡ Priority Support  
+Tägliche Updates
 
-🔥 AM BELIEBTESTEN
+OnlyFans & Influencer Zugang
+Social Media Leaks
+Download-Funktion
+Keine Wasserzeichen
+4K Video Qualität
+Priority Support
 `
   },
-  ULTRA: {
-    name: "Ultra VIP",
+  DIAMOND: {
+    name: "Diamond VIP",
     stars: 5000,
     info: `
-⭐⭐⭐ ULTRA VIP – 100 €
+Diamond VIP – 100 €
 
-━━━━━━━━━━━━━━━━━━
-📦 INHALTE
+-------------------------
+INHALTE
 5.000 Videos & Bilder
-━━━━━━━━━━━━━━━━━━
+-------------------------
 
-✨ Tägliche Updates  
-🔓 Vollzugriff auf Inhalte  
-⬇️ Download-Funktion  
-🚫 Keine Wasserzeichen  
-⭐ OnlyFans & Influencer Zugang  
-📲 Social Media Leaks  
-💬 Live-Chat Zugriff  
-🎥 4K Videos  
-⚡ Priority Support  
+Tägliche Updates
 
-💎 MAXIMAL
+Vollzugriff auf Inhalte
+OnlyFans & Influencer Zugang
+Social Media Leaks
+Download-Funktion
+Keine Wasserzeichen
+Live-Chat Zugriff
+4K Video Qualität
+Priority Support
 `
   }
 };
@@ -83,11 +81,11 @@ Perfekt für Einsteiger.
 ========================= */
 bot.start((ctx) => {
   ctx.reply(
-    "🔥 BRAVE VIP 🔥\n\nWähle dein Paket:",
+    "BRAVE VIP\n\nWähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ Basic – 25 €", "PRICE_BASIC")],
-      [Markup.button.callback("⭐⭐ Pro – 50 €", "PRICE_PRO")],
-      [Markup.button.callback("⭐⭐⭐ Ultra – 100 €", "PRICE_ULTRA")]
+      [Markup.button.callback("Gold – 25 € ⭐️", "PRICE_GOLD")],
+      [Markup.button.callback("Platin – 50 € ⭐️", "PRICE_PLATIN")],
+      [Markup.button.callback("Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
     ])
   );
 });
@@ -105,8 +103,8 @@ bot.action(/PRICE_(.+)/, async (ctx) => {
   return ctx.reply(
     pkg.info,
     Markup.inlineKeyboard([
-      [Markup.button.callback("🛒 JETZT KAUFEN ⭐", `BUY_${key}`)],
-      [Markup.button.callback("⬅️ Zurück", "BACK")]
+      [Markup.button.callback("JETZT KAUFEN ⭐️", `BUY_${key}`)],
+      [Markup.button.callback("Zurück", "BACK")]
     ])
   );
 });
@@ -119,13 +117,13 @@ bot.action(/BUY_(.+)/, async (ctx) => {
   const pkg = PACKAGES[key];
   if (!pkg) return;
 
-  await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
+  await ctx.answerCbQuery();
 
   return ctx.replyWithInvoice({
     title: pkg.name,
     description: `BRAVE VIP – ${pkg.name}`,
     payload: `${key}_${ctx.from.id}`,
-    provider_token: "", // BOTFATHER TOKEN
+    provider_token: "", // BotFather Token
     currency: "XTR",
     prices: [{ label: pkg.name, amount: pkg.stars }]
   });
@@ -139,9 +137,9 @@ bot.action("BACK", (ctx) => {
   ctx.reply(
     "Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ Basic – 25 €", "PRICE_BASIC")],
-      [Markup.button.callback("⭐⭐ Pro – 50 €", "PRICE_PRO")],
-      [Markup.button.callback("⭐⭐⭐ Ultra – 100 €", "PRICE_ULTRA")]
+      [Markup.button.callback("Gold – 25 € ⭐️", "PRICE_GOLD")],
+      [Markup.button.callback("Platin – 50 € ⭐️", "PRICE_PLATIN")],
+      [Markup.button.callback("Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
     ])
   );
 });
@@ -154,11 +152,11 @@ bot.on("pre_checkout_query", (ctx) =>
 );
 
 bot.on("successful_payment", (ctx) => {
-  ctx.reply("✅ Zahlung erfolgreich! Willkommen bei 🔥 BRAVE VIP 🔥");
+  ctx.reply("Zahlung erfolgreich. Willkommen bei BRAVE VIP.");
 });
 
 /* =========================
-   START BOT
+   START
 ========================= */
 bot.launch({ dropPendingUpdates: true });
 console.log("BOT GESTARTET");
