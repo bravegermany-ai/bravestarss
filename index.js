@@ -7,6 +7,11 @@ if (!process.env.BOT_TOKEN) {
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 /* =========================
+   KONFIG
+========================= */
+const VIP_GROUP_LINK = "https://t.me/+_Lwkx_EKnd9lMjJh";
+
+/* =========================
    PAKETE
 ========================= */
 const PACKAGES = {
@@ -84,13 +89,14 @@ bot.start((ctx) => {
     Markup.inlineKeyboard([
       [Markup.button.callback("🥇 Gold – 25 € ⭐️", "PRICE_GOLD")],
       [Markup.button.callback("💠 Platin – 50 € ⭐️", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
+      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")],
+      [Markup.button.callback("⭐️ 4.000 Stars – Direktkauf", "BUY_4000")]
     ])
   );
 });
 
 /* =========================
-   INFO
+   PAKET INFO
 ========================= */
 bot.action(/PRICE_(.+)/, async (ctx) => {
   const key = ctx.match[1];
@@ -109,12 +115,11 @@ bot.action(/PRICE_(.+)/, async (ctx) => {
 });
 
 /* =========================
-   INVOICE
+   BUY PAKETE
 ========================= */
-bot.action(/BUY_(.+)/, async (ctx) => {
+bot.action(/BUY_(GOLD|PLATIN|DIAMOND)/, async (ctx) => {
   const key = ctx.match[1];
   const pkg = PACKAGES[key];
-  if (!pkg) return;
 
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
 
@@ -129,6 +134,22 @@ bot.action(/BUY_(.+)/, async (ctx) => {
 });
 
 /* =========================
+   BUY 4.000 STARS
+========================= */
+bot.action("BUY_4000", async (ctx) => {
+  await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
+
+  return ctx.replyWithInvoice({
+    title: "4.000 Stars",
+    description: "Direktkauf – 4.000 Telegram Stars",
+    payload: `STARS_4000_${ctx.from.id}`,
+    provider_token: "", // BOTFATHER TOKEN
+    currency: "XTR",
+    prices: [{ label: "4.000 Stars", amount: 4000 }]
+  });
+});
+
+/* =========================
    ZURÜCK
 ========================= */
 bot.action("BACK", (ctx) => {
@@ -138,20 +159,31 @@ bot.action("BACK", (ctx) => {
     Markup.inlineKeyboard([
       [Markup.button.callback("🥇 Gold – 25 € ⭐️", "PRICE_GOLD")],
       [Markup.button.callback("💠 Platin – 50 € ⭐️", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
+      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")],
+      [Markup.button.callback("⭐️ 4.000 Stars – Direktkauf", "BUY_4000")]
     ])
   );
 });
 
 /* =========================
-   PAYMENT
+   PAYMENT EVENTS
 ========================= */
 bot.on("pre_checkout_query", (ctx) =>
   ctx.answerPreCheckoutQuery(true)
 );
 
-bot.on("successful_payment", (ctx) => {
-  ctx.reply("✅ Zahlung erfolgreich! Willkommen bei 🔥 BRAVE VIP 🔥");
+bot.on("successful_payment", async (ctx) => {
+  await ctx.reply(
+    "✅ Zahlung erfolgreich!\n\n👉 Klicke unten, um eine Beitrittsanfrage zur VIP-Gruppe zu senden:",
+    Markup.inlineKeyboard([
+      [
+        Markup.button.url(
+          "⭐️ ZUR VIP-GRUPPE ⭐️",
+          VIP_GROUP_LINK
+        )
+      ]
+    ])
+  );
 });
 
 /* =========================
@@ -159,3 +191,6 @@ bot.on("successful_payment", (ctx) => {
 ========================= */
 bot.launch({ dropPendingUpdates: true });
 console.log("BOT GESTARTET");
+
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
