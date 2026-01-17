@@ -14,7 +14,7 @@ const PACKAGES = {
     name: "Gold VIP",
     stars: 1000,
     info: `
-🥇 GOLD VIP
+🥇 GOLD VIP – 21,99 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
@@ -37,7 +37,7 @@ const PACKAGES = {
     name: "Platin VIP",
     stars: 2500,
     info: `
-💠 PLATIN VIP
+💠 PLATIN VIP – 53,99 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
@@ -61,7 +61,7 @@ const PACKAGES = {
     name: "Diamond VIP",
     stars: 5000,
     info: `
-💎 DIAMOND VIP
+💎 DIAMOND VIP – 109 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
@@ -86,7 +86,7 @@ const PACKAGES = {
     name: "Elite VIP",
     stars: 10000,
     info: `
-👑 ELITE VIP
+👑 ELITE VIP – 219 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
@@ -117,10 +117,10 @@ bot.start((ctx) => {
   ctx.reply(
     "🔥 BRAVE VIP 🔥\n\n🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond ⭐", "PRICE_DIAMOND")],
-      [Markup.button.callback("👑 Elite ⭐", "PRICE_ELITE")]
+      [Markup.button.callback("🥇 Gold – 21,99 € ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("💠 Platin – 53,99 € ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("💎 Diamond – 109 € ⭐", "PRICE_DIAMOND")],
+      [Markup.button.callback("👑 Elite – 219 € ⭐", "PRICE_ELITE")]
     ])
   );
 });
@@ -158,7 +158,7 @@ bot.action(/BUY_(.+)/, async (ctx) => {
     title: pkg.name,
     description: `BRAVE VIP – ${pkg.name}`,
     payload: `${key}_${ctx.from.id}`,
-    provider_token: "",
+    provider_token: "", // TOKEN VON BOTFATHER
     currency: "XTR",
     prices: [{ label: pkg.name, amount: pkg.stars }]
   });
@@ -172,10 +172,10 @@ bot.action("BACK", (ctx) => {
   ctx.reply(
     "🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond ⭐", "PRICE_DIAMOND")],
-      [Markup.button.callback("👑 Elite ⭐", "PRICE_ELITE")]
+      [Markup.button.callback("🥇 Gold – 21,99 € ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("💠 Platin – 53,99 € ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("💎 Diamond – 109 € ⭐", "PRICE_DIAMOND")],
+      [Markup.button.callback("👑 Elite – 219 € ⭐", "PRICE_ELITE")]
     ])
   );
 });
