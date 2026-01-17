@@ -7,6 +7,11 @@ if (!process.env.BOT_TOKEN) {
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 /* =========================
+   PREVIEW BILD (FÜR ALLE)
+========================= */
+const PREVIEW_IMAGE = "HIER_DEINE_FILE_ID";
+
+/* =========================
    PAKETE
 ========================= */
 const PACKAGES = {
@@ -24,8 +29,6 @@ BRONZE VIP
 - OnlyFans Zugang
 - HD Video Qualität
 - Standard Support
-
-Geeignet als Einstiegspaket.
 `
   },
   SILBER: {
@@ -43,8 +46,6 @@ SILBER VIP
 - Influencer Inhalte
 - HD Video Qualität
 - Standard Support
-
-Mehr Inhalte, mehr Auswahl.
 `
   },
   GOLD: {
@@ -63,8 +64,6 @@ GOLD VIP
 - Social Media Leaks
 - 4K Video Qualität
 - Priority Support
-
-Bestes Preis-Leistungs-Verhältnis.
 `
   },
   PLATIN: {
@@ -84,8 +83,6 @@ PLATIN VIP
 - Keine Wasserzeichen
 - 4K Video Qualität
 - Priority Support
-
-Für Nutzer mit höheren Ansprüchen.
 `
   },
   DIAMOND: {
@@ -107,8 +104,6 @@ DIAMOND VIP
 - Votings und Mitbestimmung
 - 4K Video Qualität
 - Priority Support
-
-Fast vollständiger Zugriff.
 `
   },
   ELITE: {
@@ -132,31 +127,29 @@ ELITE VIP
 - Gewinnspiele und Verlosungen
 - 8K Video Qualität
 - 24/7 High-End Support
-
-Das umfangreichste Paket.
 `
   }
 };
 
 /* =========================
-   START – PREIS BUTTONS
+   START
 ========================= */
 bot.start((ctx) => {
   ctx.reply(
     "BRAVE VIP\n\nWähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ★", "PRICE_BRONZE")],
-      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ★", "PRICE_SILBER")],
-      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ★", "PRICE_GOLD")],
-      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ★", "PRICE_PLATIN")],
-      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ★", "PRICE_DIAMOND")],
-      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ★", "PRICE_ELITE")]
+      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ⭐", "PRICE_BRONZE")],
+      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ⭐", "PRICE_SILBER")],
+      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ⭐", "PRICE_DIAMOND")],
+      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ⭐", "PRICE_ELITE")]
     ])
   );
 });
 
 /* =========================
-   MEHR INFO
+   PREIS → FOTO → INFO
 ========================= */
 bot.action(/PRICE_(.+)/, async (ctx) => {
   const key = ctx.match[1];
@@ -164,22 +157,24 @@ bot.action(/PRICE_(.+)/, async (ctx) => {
 
   await ctx.answerCbQuery();
 
+  await ctx.replyWithPhoto(PREVIEW_IMAGE);
+
   return ctx.reply(
     pkg.info,
     Markup.inlineKeyboard([
       [
         Markup.button.callback(
-          `Jetzt kaufen – ${pkg.stars} Stars (${pkg.euro}) ★`,
+          `Jetzt kaufen – ${pkg.stars} Stars (${pkg.euro}) ⭐`,
           `BUY_${key}`
         )
       ],
-      [Markup.button.callback("Zurück ★", "BACK")]
+      [Markup.button.callback("Zurück ⭐", "BACK")]
     ])
   );
 });
 
 /* =========================
-   INVOICE
+   ZAHLUNG
 ========================= */
 bot.action(/BUY_(.+)/, async (ctx) => {
   const key = ctx.match[1];
@@ -205,12 +200,12 @@ bot.action("BACK", (ctx) => {
   ctx.reply(
     "Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ★", "PRICE_BRONZE")],
-      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ★", "PRICE_SILBER")],
-      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ★", "PRICE_GOLD")],
-      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ★", "PRICE_PLATIN")],
-      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ★", "PRICE_DIAMOND")],
-      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ★", "PRICE_ELITE")]
+      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ⭐", "PRICE_BRONZE")],
+      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ⭐", "PRICE_SILBER")],
+      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ⭐", "PRICE_DIAMOND")],
+      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ⭐", "PRICE_ELITE")]
     ])
   );
 });
@@ -235,3 +230,4 @@ console.log("BOT GESTARTET");
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
+
