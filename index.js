@@ -14,37 +14,37 @@ const PACKAGES = {
     name: "Gold VIP",
     stars: 1000,
     info: `
-🥇 GOLD VIP – 21,99 €
+🥇 GOLD VIP – 21,49 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
 500 Videos & Bilder
 ━━━━━━━━━━━━━━━━━━
 
-✨ Tägliche Updates  
+✨ Tägliche Updates
 
 💎 Premium Inhalte  
 🔥 OnlyFans Zugang  
 ⭐ Influencer Zugang  
 📲 Social Media Leaks  
 🎥 4K Video Qualität  
-⚡ Priority Support  
+⚡ Priority Support
 
-🔥 Beliebtestes Paket
+🔥 BELIEBT
 `
   },
   PLATIN: {
     name: "Platin VIP",
     stars: 2500,
     info: `
-💠 PLATIN VIP – 53,99 €
+💠 PLATIN VIP – 53,90 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
 1.500 Videos & Bilder
 ━━━━━━━━━━━━━━━━━━
 
-✨ Tägliche Updates  
+✨ Tägliche Updates
 
 💎 Exklusive Premium Inhalte  
 🔥 OnlyFans & Influencer Zugang  
@@ -52,23 +52,23 @@ const PACKAGES = {
 ⬇️ Download-Funktion  
 🚫 Keine Wasserzeichen  
 🎥 4K Video Qualität  
-⚡ Priority Support  
+⚡ Priority Support
 
-💎 Für Anspruchsvolle
+💠 MEHR POWER
 `
   },
   DIAMOND: {
     name: "Diamond VIP",
     stars: 5000,
     info: `
-💎 DIAMOND VIP – 109 €
+💎 DIAMOND VIP – 106,99 €
 
 ━━━━━━━━━━━━━━━━━━
 📦 INHALTE
 5.000 Videos & Bilder
 ━━━━━━━━━━━━━━━━━━
 
-✨ Tägliche Updates  
+✨ Tägliche Updates
 
 ⬇️ Download-Funktion  
 🚫 Keine Wasserzeichen  
@@ -77,35 +77,9 @@ const PACKAGES = {
 💬 Live-Chat Zugriff  
 🗳 Votings & Mitbestimmung  
 🎥 4K Video Qualität  
-⚡ Priority Support  
+⚡ Priority Support
 
-💎 Fast kompletter Zugriff
-`
-  },
-  ELITE: {
-    name: "Elite VIP",
-    stars: 10000,
-    info: `
-👑 ELITE VIP – 219 €
-
-━━━━━━━━━━━━━━━━━━
-📦 INHALTE
-12.000 Videos & Bilder
-━━━━━━━━━━━━━━━━━━
-
-✨ Tägliche Updates  
-
-🔓 Vollzugriff auf alle Inhalte  
-⬇️ Download-Funktion  
-🚫 Keine Wasserzeichen  
-🔥 OnlyFans & Influencer Zugang  
-📲 Social Media & Snapchat Leaks  
-💬 Private Telegram Gruppe  
-🎁 Gewinnspiele & Verlosungen  
-🎥 8K Video Qualität  
-🛎 24/7 High-End Support  
-
-👑 KRASSESTES PAKET
+💎 MAXIMAL
 `
   }
 };
@@ -117,10 +91,9 @@ bot.start((ctx) => {
   ctx.reply(
     "🔥 BRAVE VIP 🔥\n\n🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold – 21,99 € ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin – 53,99 € ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 109 € ⭐", "PRICE_DIAMOND")],
-      [Markup.button.callback("👑 Elite – 219 € ⭐", "PRICE_ELITE")]
+      [Markup.button.callback("🥇 Gold – 21,49 € ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("💠 Platin – 53,90 € ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("💎 Diamond – 106,99 € ⭐", "PRICE_DIAMOND")]
     ])
   );
 });
@@ -158,7 +131,7 @@ bot.action(/BUY_(.+)/, async (ctx) => {
     title: pkg.name,
     description: `BRAVE VIP – ${pkg.name}`,
     payload: `${key}_${ctx.from.id}`,
-    provider_token: "", // TOKEN VON BOTFATHER
+    provider_token: "", // BOTFATHER TOKEN
     currency: "XTR",
     prices: [{ label: pkg.name, amount: pkg.stars }]
   });
@@ -172,10 +145,9 @@ bot.action("BACK", (ctx) => {
   ctx.reply(
     "🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold – 21,99 € ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin – 53,99 € ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 109 € ⭐", "PRICE_DIAMOND")],
-      [Markup.button.callback("👑 Elite – 219 € ⭐", "PRICE_ELITE")]
+      [Markup.button.callback("🥇 Gold – 21,49 € ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("💠 Platin – 53,90 € ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("💎 Diamond – 106,99 € ⭐", "PRICE_DIAMOND")]
     ])
   );
 });
