@@ -1,233 +1,163 @@
 import { Telegraf, Markup } from "telegraf";
 
-if (!process.env.BOT_TOKEN) {
-  throw new Error("BOT_TOKEN fehlt");
-}
+process.on("unhandledRejection", console.error);
+process.on("uncaughtException", console.error);
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-/* =========================
-   PREVIEW BILD (FÜR ALLE)
-========================= */
-const PREVIEW_IMAGE = "HIER_DEINE_FILE_ID";
+// HIER EINE ECHTE file_id EINTRAGEN
+const PREVIEW_IMAGE = "AGACAgQAAxkBAAIB...";
 
-/* =========================
-   PAKETE
-========================= */
+// PAKETE
 const PACKAGES = {
-  BRONZE: {
-    name: "Bronze VIP",
+  STARTER: {
+    name: "STARTER",
     stars: 250,
-    euro: "≈ 5,39 €",
-    info: `
-BRONZE VIP
-250 Stars (≈ 5,39 €)
+    euro: "25 €",
+    info: `STARTER
 
-- Tägliche Updates
-- Standard Inhalte
-- Community Zugriff
-- OnlyFans Zugang
-- HD Video Qualität
-- Standard Support
-`
+Tägliche Updates
+Standard Inhalte
+Community Forum
+OnlyFans Zugang
+HD Video Qualität
+Standard Support`
   },
-  SILBER: {
-    name: "Silber VIP",
+  ULTRA: {
+    name: "ULTRA",
     stars: 500,
-    euro: "≈ 10,79 €",
-    info: `
-SILBER VIP
-500 Stars (≈ 10,79 €)
+    euro: "50 €",
+    info: `ULTRA
 
-- Tägliche Updates
-- Erweiterte Inhalte
-- Community Zugriff
-- OnlyFans Zugang
-- Influencer Inhalte
-- HD Video Qualität
-- Standard Support
-`
+Tägliche Updates
+Premium Inhalte
+Community Forum
+OnlyFans Zugang
+Influencer Zugang
+Social Media Leaks
+4K Video Qualität
+Priority Support`
   },
-  GOLD: {
-    name: "Gold VIP",
+  ULTRAPRO: {
+    name: "ULTRA PRO",
     stars: 1000,
-    euro: "≈ 21,99 €",
-    info: `
-GOLD VIP
-1.000 Stars (≈ 21,99 €)
+    euro: "100 €",
+    info: `ULTRA PRO (Lifetime)
 
-- Tägliche Updates
-- Premium Inhalte
-- Community Zugriff
-- OnlyFans Zugang
-- Influencer Zugang
-- Social Media Leaks
-- 4K Video Qualität
-- Priority Support
-`
+Tägliche Updates
+Inhalte im Wert von 5000 €
+Download-Funktion
+Keine Wasserzeichen
+OnlyFans Zugang
+Influencer Zugang
+Live Chat Zugang
+4K Video Qualität
+Priority Support`
   },
-  PLATIN: {
-    name: "Platin VIP",
-    stars: 2500,
-    euro: "≈ 53,99 €",
-    info: `
-PLATIN VIP
-2.500 Stars (≈ 53,99 €)
+  ULTIMATE: {
+    name: "ULTIMATE",
+    stars: 1500,
+    euro: "150 €",
+    info: `ULTIMATE (Lifetime)
 
-- Tägliche Updates
-- Premium und exklusive Inhalte
-- Community Zugriff
-- OnlyFans und Influencer Zugang
-- Social Media Leaks
-- Download-Funktion
-- Keine Wasserzeichen
-- 4K Video Qualität
-- Priority Support
-`
-  },
-  DIAMOND: {
-    name: "Diamond VIP",
-    stars: 5000,
-    euro: "≈ 109 €",
-    info: `
-DIAMOND VIP
-5.000 Stars (≈ 109 €)
-
-- Tägliche Updates
-- Inhalte mit hohem Gegenwert
-- Community Zugriff
-- Download-Funktion
-- Keine Wasserzeichen
-- OnlyFans und Influencer Zugang
-- Social Media Leaks
-- Live-Chat Zugriff
-- Votings und Mitbestimmung
-- 4K Video Qualität
-- Priority Support
-`
-  },
-  ELITE: {
-    name: "Elite VIP",
-    stars: 10000,
-    euro: "≈ 219 €",
-    info: `
-ELITE VIP
-10.000 Stars (≈ 219 €)
-
-- Tägliche Updates
-- Vollzugriff auf alle Inhalte
-- Community Zugriff
-- Download-Funktion
-- Keine Wasserzeichen
-- OnlyFans und Influencer Zugang
-- Social Media und Snapchat Leaks
-- Private Telegram Gruppe
-- Live-Chat Zugriff
-- Votings und Mitbestimmung
-- Gewinnspiele und Verlosungen
-- 8K Video Qualität
-- 24/7 High-End Support
-`
+3/10 Plätze verfügbar
+Inhalte im Wert von 10.000 €
+Download-Funktion
+Keine Wasserzeichen
+Private Telegram Gruppe
+Live-Chat mit Frauen
+Gewinnspiele
+8K Video Qualität
+24/7 Support`
   }
 };
 
-/* =========================
-   START
-========================= */
+// START
 bot.start((ctx) => {
   ctx.reply(
-    "BRAVE VIP\n\nWähle dein Paket:",
+    "BRAVE VIP JETZT ONLINE\nWähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ⭐", "PRICE_BRONZE")],
-      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ⭐", "PRICE_SILBER")],
-      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ⭐", "PRICE_DIAMOND")],
-      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ⭐", "PRICE_ELITE")]
+      [Markup.button.callback("STARTER – 25 € ⭐", "PRICE_STARTER")],
+      [Markup.button.callback("ULTRA – 50 € ⭐", "PRICE_ULTRA")],
+      [Markup.button.callback("ULTRA PRO – 100 € ⭐", "PRICE_ULTRAPRO")],
+      [Markup.button.callback("ULTIMATE – 150 € ⭐", "PRICE_ULTIMATE")]
     ])
   );
 });
 
-/* =========================
-   PREIS → FOTO → INFO
-========================= */
+// PREIS → INFO
 bot.action(/PRICE_(.+)/, async (ctx) => {
-  const key = ctx.match[1];
-  const pkg = PACKAGES[key];
+  try {
+    const key = ctx.match[1];
+    const pkg = PACKAGES[key];
+    if (!pkg) return;
 
-  await ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
-  await ctx.replyWithPhoto(PREVIEW_IMAGE);
+    if (PREVIEW_IMAGE && !PREVIEW_IMAGE.includes("HIER")) {
+      await ctx.replyWithPhoto(PREVIEW_IMAGE);
+    }
 
-  return ctx.reply(
-    pkg.info,
-    Markup.inlineKeyboard([
-      [
-        Markup.button.callback(
-          `Jetzt kaufen – ${pkg.stars} Stars (${pkg.euro}) ⭐`,
-          `BUY_${key}`
-        )
-      ],
-      [Markup.button.callback("Zurück ⭐", "BACK")]
-    ])
-  );
+    await ctx.reply(
+      pkg.info,
+      Markup.inlineKeyboard([
+        [
+          Markup.button.callback(
+            `Jetzt kaufen – ${pkg.euro} ⭐`,
+            `BUY_${key}`
+          )
+        ],
+        [Markup.button.callback("Zurück ⭐", "BACK")]
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+    ctx.reply("Fehler – bitte erneut versuchen.");
+  }
 });
 
-/* =========================
-   ZAHLUNG
-========================= */
-bot.action(/BUY_(.+)/, async (ctx) => {
-  const key = ctx.match[1];
-  const pkg = PACKAGES[key];
-
-  await ctx.answerCbQuery("Zahlung wird vorbereitet");
-
-  return ctx.replyWithInvoice({
-    title: pkg.name,
-    description: `BRAVE VIP – ${pkg.name}`,
-    payload: `${key}_${ctx.from.id}`,
-    provider_token: "",
-    currency: "XTR",
-    prices: [{ label: pkg.name, amount: pkg.stars }]
-  });
-});
-
-/* =========================
-   ZURÜCK
-========================= */
+// ZURÜCK
 bot.action("BACK", (ctx) => {
   ctx.answerCbQuery();
   ctx.reply(
     "Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ⭐", "PRICE_BRONZE")],
-      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ⭐", "PRICE_SILBER")],
-      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ⭐", "PRICE_GOLD")],
-      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ⭐", "PRICE_PLATIN")],
-      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ⭐", "PRICE_DIAMOND")],
-      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ⭐", "PRICE_ELITE")]
+      [Markup.button.callback("STARTER – 25 € ⭐", "PRICE_STARTER")],
+      [Markup.button.callback("ULTRA – 50 € ⭐", "PRICE_ULTRA")],
+      [Markup.button.callback("ULTRA PRO – 100 € ⭐", "PRICE_ULTRAPRO")],
+      [Markup.button.callback("ULTIMATE – 150 € ⭐", "PRICE_ULTIMATE")]
     ])
   );
 });
 
-/* =========================
-   PAYMENT EVENTS
-========================= */
+// KAUF
+bot.action(/BUY_(.+)/, (ctx) => {
+  const key = ctx.match[1];
+  const pkg = PACKAGES[key];
+
+  ctx.answerCbQuery();
+  ctx.replyWithInvoice({
+    title: `${pkg.name} Paket`,
+    description: `${pkg.name} bei BRAVE`,
+    payload: key,
+    provider_token: process.env.PROVIDER_TOKEN,
+    currency: "XTR",
+    prices: [{ label: pkg.name, amount: pkg.stars }]
+  });
+});
+
+// PAYMENT
 bot.on("pre_checkout_query", (ctx) =>
   ctx.answerPreCheckoutQuery(true)
 );
 
 bot.on("successful_payment", (ctx) => {
-  const stars = ctx.message.successful_payment.total_amount;
-  ctx.reply(`Zahlung erfolgreich.\n${stars} Stars wurden gutgeschrieben.`);
+  ctx.reply("Zahlung erfolgreich. Willkommen bei BRAVE.");
 });
 
-/* =========================
-   START BOT
-========================= */
-bot.launch({ dropPendingUpdates: true });
-console.log("BOT GESTARTET");
-
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
-
+// START BOT
+(async () => {
+  await bot.telegram.deleteWebhook();
+  await bot.launch({ dropPendingUpdates: true });
+  console.log("BOT GESTARTET");
+})();
