@@ -13,167 +13,153 @@ const PACKAGES = {
   BRONZE: {
     name: "Bronze VIP",
     stars: 250,
-    euro: "≈ 5,39 €",
     info: `
-BRONZE VIP
-250 Stars (≈ 5,39 €)
+🥉 BRONZE VIP
 
-- Tägliche Updates
-- Standard Inhalte
-- Community Zugriff
-- OnlyFans Zugang
-- HD Video Qualität
-- Standard Support
+✨ Tägliche Updates  
+📂 Standard Inhalte  
+👥 Community Zugriff  
+🔥 OnlyFans Zugang  
+🎥 HD Video Qualität  
+🛠 Standard Support  
 
-Geeignet als Einstiegspaket.
+💡 Perfekt für den Einstieg.
 `
   },
   SILBER: {
     name: "Silber VIP",
     stars: 500,
-    euro: "≈ 10,79 €",
     info: `
-SILBER VIP
-500 Stars (≈ 10,79 €)
+🥈 SILBER VIP
 
-- Tägliche Updates
-- Erweiterte Inhalte
-- Community Zugriff
-- OnlyFans Zugang
-- Influencer Inhalte
-- HD Video Qualität
-- Standard Support
+✨ Tägliche Updates  
+📂 Erweiterte Inhalte  
+👥 Community Zugriff  
+🔥 OnlyFans Zugang  
+⭐ Influencer Inhalte  
+🎥 HD Video Qualität  
+🛠 Standard Support  
 
-Mehr Inhalte, mehr Auswahl.
+🚀 Mehr Auswahl, mehr Inhalte.
 `
   },
   GOLD: {
     name: "Gold VIP",
     stars: 1000,
-    euro: "≈ 21,99 €",
     info: `
-GOLD VIP
-1.000 Stars (≈ 21,99 €)
+🥇 GOLD VIP
 
-- Tägliche Updates
-- Premium Inhalte
-- Community Zugriff
-- OnlyFans Zugang
-- Influencer Zugang
-- Social Media Leaks
-- 4K Video Qualität
-- Priority Support
+✨ Tägliche Updates  
+📦 500 Inhalte  
+💎 Premium Inhalte  
+👥 Community Zugriff  
+🔥 OnlyFans Zugang  
+⭐ Influencer Zugang  
+📲 Social Media Leaks  
+🎥 4K Video Qualität  
+⚡ Priority Support  
 
-Bestes Preis-Leistungs-Verhältnis.
+🔥 Bestseller Paket.
 `
   },
   PLATIN: {
     name: "Platin VIP",
     stars: 2500,
-    euro: "≈ 53,99 €",
     info: `
-PLATIN VIP
-2.500 Stars (≈ 53,99 €)
+💠 PLATIN VIP
 
-- Tägliche Updates
-- Premium und exklusive Inhalte
-- Community Zugriff
-- OnlyFans und Influencer Zugang
-- Social Media Leaks
-- Download-Funktion
-- Keine Wasserzeichen
-- 4K Video Qualität
-- Priority Support
+✨ Tägliche Updates  
+📦 1.500 Inhalte  
+💎 Exklusive Premium Inhalte  
+👥 Community Zugriff  
+🔥 OnlyFans & Influencer Zugang  
+📲 Social Media Leaks  
+⬇️ Download-Funktion  
+🚫 Keine Wasserzeichen  
+🎥 4K Video Qualität  
+⚡ Priority Support  
 
-Für Nutzer mit höheren Ansprüchen.
+💎 Für echte Genießer.
 `
   },
   DIAMOND: {
     name: "Diamond VIP",
     stars: 5000,
-    euro: "≈ 109 €",
     info: `
-DIAMOND VIP
-5.000 Stars (≈ 109 €)
+💎 DIAMOND VIP
 
-- Tägliche Updates
-- Inhalte mit hohem Gegenwert
-- Community Zugriff
-- Download-Funktion
-- Keine Wasserzeichen
-- OnlyFans und Influencer Zugang
-- Social Media Leaks
-- Live-Chat Zugriff
-- Votings und Mitbestimmung
-- 4K Video Qualität
-- Priority Support
+✨ Tägliche Updates  
+📦 5.000 Inhalte  
+👥 Community Zugriff  
+⬇️ Download-Funktion  
+🚫 Keine Wasserzeichen  
+🔥 OnlyFans & Influencer Zugang  
+📲 Social Media Leaks  
+💬 Live-Chat Zugriff  
+🗳 Votings & Mitbestimmung  
+🎥 4K Video Qualität  
+⚡ Priority Support  
 
-Fast vollständiger Zugriff.
+💎 Fast kompletter Zugriff.
 `
   },
   ELITE: {
     name: "Elite VIP",
     stars: 10000,
-    euro: "≈ 219 €",
     info: `
-ELITE VIP
-10.000 Stars (≈ 219 €)
+👑 ELITE VIP
 
-- Tägliche Updates
-- Vollzugriff auf alle Inhalte
-- Community Zugriff
-- Download-Funktion
-- Keine Wasserzeichen
-- OnlyFans und Influencer Zugang
-- Social Media und Snapchat Leaks
-- Private Telegram Gruppe
-- Live-Chat Zugriff
-- Votings und Mitbestimmung
-- Gewinnspiele und Verlosungen
-- 8K Video Qualität
-- 24/7 High-End Support
+✨ Tägliche Updates  
+📦 12.000 Inhalte  
+🔓 Vollzugriff auf alle Inhalte  
+👥 Community Zugriff  
+⬇️ Download-Funktion  
+🚫 Keine Wasserzeichen  
+🔥 OnlyFans & Influencer Zugang  
+📲 Social Media & Snapchat Leaks  
+💬 Private Telegram Gruppe  
+🗳 Votings & Mitbestimmung  
+🎁 Gewinnspiele & Verlosungen  
+🎥 8K Video Qualität  
+🛎 24/7 High-End Support  
 
-Das umfangreichste Paket.
+👑 Das ultimative Paket.
 `
   }
 };
 
 /* =========================
-   START – PREIS BUTTONS
+   START
 ========================= */
 bot.start((ctx) => {
   ctx.reply(
-    "BRAVE VIP\n\nWähle dein Paket:",
+    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ★", "PRICE_BRONZE")],
-      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ★", "PRICE_SILBER")],
-      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ★", "PRICE_GOLD")],
-      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ★", "PRICE_PLATIN")],
-      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ★", "PRICE_DIAMOND")],
-      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ★", "PRICE_ELITE")]
+      [Markup.button.callback("🥉 Bronze ⭐", "PRICE_BRONZE")],
+      [Markup.button.callback("🥈 Silber ⭐", "PRICE_SILBER")],
+      [Markup.button.callback("🥇 Gold ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("💠 Platin ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("💎 Diamond ⭐", "PRICE_DIAMOND")],
+      [Markup.button.callback("👑 Elite ⭐", "PRICE_ELITE")]
     ])
   );
 });
 
 /* =========================
-   MEHR INFO
+   INFO
 ========================= */
 bot.action(/PRICE_(.+)/, async (ctx) => {
   const key = ctx.match[1];
   const pkg = PACKAGES[key];
+  if (!pkg) return;
 
   await ctx.answerCbQuery();
 
   return ctx.reply(
     pkg.info,
     Markup.inlineKeyboard([
-      [
-        Markup.button.callback(
-          `Jetzt kaufen – ${pkg.stars} Stars (${pkg.euro}) ★`,
-          `BUY_${key}`
-        )
-      ],
-      [Markup.button.callback("Zurück ★", "BACK")]
+      [Markup.button.callback("🛒 JETZT KAUFEN ⭐", `BUY_${key}`)],
+      [Markup.button.callback("⬅️ Zurück ⭐", "BACK")]
     ])
   );
 });
@@ -184,8 +170,9 @@ bot.action(/PRICE_(.+)/, async (ctx) => {
 bot.action(/BUY_(.+)/, async (ctx) => {
   const key = ctx.match[1];
   const pkg = PACKAGES[key];
+  if (!pkg) return;
 
-  await ctx.answerCbQuery("Zahlung wird vorbereitet");
+  await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
 
   return ctx.replyWithInvoice({
     title: pkg.name,
@@ -203,14 +190,14 @@ bot.action(/BUY_(.+)/, async (ctx) => {
 bot.action("BACK", (ctx) => {
   ctx.answerCbQuery();
   ctx.reply(
-    "Wähle dein Paket:",
+    "🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("Bronze – 250 Stars (≈ 5,39 €) ★", "PRICE_BRONZE")],
-      [Markup.button.callback("Silber – 500 Stars (≈ 10,79 €) ★", "PRICE_SILBER")],
-      [Markup.button.callback("Gold – 1.000 Stars (≈ 21,99 €) ★", "PRICE_GOLD")],
-      [Markup.button.callback("Platin – 2.500 Stars (≈ 53,99 €) ★", "PRICE_PLATIN")],
-      [Markup.button.callback("Diamond – 5.000 Stars (≈ 109 €) ★", "PRICE_DIAMOND")],
-      [Markup.button.callback("Elite – 10.000 Stars (≈ 219 €) ★", "PRICE_ELITE")]
+      [Markup.button.callback("🥉 Bronze ⭐", "PRICE_BRONZE")],
+      [Markup.button.callback("🥈 Silber ⭐", "PRICE_SILBER")],
+      [Markup.button.callback("🥇 Gold ⭐", "PRICE_GOLD")],
+      [Markup.button.callback("💠 Platin ⭐", "PRICE_PLATIN")],
+      [Markup.button.callback("💎 Diamond ⭐", "PRICE_DIAMOND")],
+      [Markup.button.callback("👑 Elite ⭐", "PRICE_ELITE")]
     ])
   );
 });
@@ -223,8 +210,7 @@ bot.on("pre_checkout_query", (ctx) =>
 );
 
 bot.on("successful_payment", (ctx) => {
-  const stars = ctx.message.successful_payment.total_amount;
-  ctx.reply(`Zahlung erfolgreich.\n${stars} Stars wurden gutgeschrieben.`);
+  ctx.reply("✅ Zahlung erfolgreich! Willkommen bei 🔥 BRAVE VIP 🔥");
 });
 
 /* =========================
@@ -232,6 +218,3 @@ bot.on("successful_payment", (ctx) => {
 ========================= */
 bot.launch({ dropPendingUpdates: true });
 console.log("BOT GESTARTET");
-
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
