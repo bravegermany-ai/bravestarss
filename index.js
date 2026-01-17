@@ -7,7 +7,7 @@ if (!process.env.BOT_TOKEN) {
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 /* =========================
-   PAKETE (NUR HOCHWERTIG)
+   PAKETE
 ========================= */
 const PACKAGES = {
   GOLD: {
@@ -16,8 +16,13 @@ const PACKAGES = {
     info: `
 🥇 GOLD VIP
 
+━━━━━━━━━━━━━━━━━━
+📦 INHALTE
+500 Videos & Bilder
+━━━━━━━━━━━━━━━━━━
+
 ✨ Tägliche Updates  
-📦 500 Inhalte  
+
 💎 Premium Inhalte  
 🔥 OnlyFans Zugang  
 ⭐ Influencer Zugang  
@@ -25,7 +30,7 @@ const PACKAGES = {
 🎥 4K Video Qualität  
 ⚡ Priority Support  
 
-🔥 Beliebtestes Paket.
+🔥 Beliebtestes Paket
 `
   },
   PLATIN: {
@@ -34,8 +39,13 @@ const PACKAGES = {
     info: `
 💠 PLATIN VIP
 
+━━━━━━━━━━━━━━━━━━
+📦 INHALTE
+1.500 Videos & Bilder
+━━━━━━━━━━━━━━━━━━
+
 ✨ Tägliche Updates  
-📦 1.500 Inhalte  
+
 💎 Exklusive Premium Inhalte  
 🔥 OnlyFans & Influencer Zugang  
 📲 Social Media Leaks  
@@ -44,7 +54,7 @@ const PACKAGES = {
 🎥 4K Video Qualität  
 ⚡ Priority Support  
 
-💎 Für Anspruchsvolle.
+💎 Für Anspruchsvolle
 `
   },
   DIAMOND: {
@@ -53,8 +63,13 @@ const PACKAGES = {
     info: `
 💎 DIAMOND VIP
 
+━━━━━━━━━━━━━━━━━━
+📦 INHALTE
+5.000 Videos & Bilder
+━━━━━━━━━━━━━━━━━━
+
 ✨ Tägliche Updates  
-📦 5.000 Inhalte  
+
 ⬇️ Download-Funktion  
 🚫 Keine Wasserzeichen  
 🔥 OnlyFans & Influencer Zugang  
@@ -64,7 +79,7 @@ const PACKAGES = {
 🎥 4K Video Qualität  
 ⚡ Priority Support  
 
-💎 Fast kompletter Zugriff.
+💎 Fast kompletter Zugriff
 `
   },
   ELITE: {
@@ -73,8 +88,13 @@ const PACKAGES = {
     info: `
 👑 ELITE VIP
 
+━━━━━━━━━━━━━━━━━━
+📦 INHALTE
+12.000 Videos & Bilder
+━━━━━━━━━━━━━━━━━━
+
 ✨ Tägliche Updates  
-📦 12.000 Inhalte  
+
 🔓 Vollzugriff auf alle Inhalte  
 ⬇️ Download-Funktion  
 🚫 Keine Wasserzeichen  
@@ -85,7 +105,7 @@ const PACKAGES = {
 🎥 8K Video Qualität  
 🛎 24/7 High-End Support  
 
-👑 KRASSESTES PAKET.
+👑 KRASSESTES PAKET
 `
   }
 };
