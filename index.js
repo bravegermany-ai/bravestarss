@@ -7,42 +7,9 @@ if (!process.env.BOT_TOKEN) {
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 /* =========================
-   PAKETE
+   PAKETE (NUR HOCHWERTIG)
 ========================= */
 const PACKAGES = {
-  BRONZE: {
-    name: "Bronze VIP",
-    stars: 250,
-    info: `
-🥉 BRONZE VIP
-
-✨ Tägliche Updates  
-📂 Standard Inhalte  
-👥 Community Zugriff  
-🔥 OnlyFans Zugang  
-🎥 HD Video Qualität  
-🛠 Standard Support  
-
-💡 Perfekt für den Einstieg.
-`
-  },
-  SILBER: {
-    name: "Silber VIP",
-    stars: 500,
-    info: `
-🥈 SILBER VIP
-
-✨ Tägliche Updates  
-📂 Erweiterte Inhalte  
-👥 Community Zugriff  
-🔥 OnlyFans Zugang  
-⭐ Influencer Inhalte  
-🎥 HD Video Qualität  
-🛠 Standard Support  
-
-🚀 Mehr Auswahl, mehr Inhalte.
-`
-  },
   GOLD: {
     name: "Gold VIP",
     stars: 1000,
@@ -52,14 +19,13 @@ const PACKAGES = {
 ✨ Tägliche Updates  
 📦 500 Inhalte  
 💎 Premium Inhalte  
-👥 Community Zugriff  
 🔥 OnlyFans Zugang  
 ⭐ Influencer Zugang  
 📲 Social Media Leaks  
 🎥 4K Video Qualität  
 ⚡ Priority Support  
 
-🔥 Bestseller Paket.
+🔥 Beliebtestes Paket.
 `
   },
   PLATIN: {
@@ -71,7 +37,6 @@ const PACKAGES = {
 ✨ Tägliche Updates  
 📦 1.500 Inhalte  
 💎 Exklusive Premium Inhalte  
-👥 Community Zugriff  
 🔥 OnlyFans & Influencer Zugang  
 📲 Social Media Leaks  
 ⬇️ Download-Funktion  
@@ -79,7 +44,7 @@ const PACKAGES = {
 🎥 4K Video Qualität  
 ⚡ Priority Support  
 
-💎 Für echte Genießer.
+💎 Für Anspruchsvolle.
 `
   },
   DIAMOND: {
@@ -90,7 +55,6 @@ const PACKAGES = {
 
 ✨ Tägliche Updates  
 📦 5.000 Inhalte  
-👥 Community Zugriff  
 ⬇️ Download-Funktion  
 🚫 Keine Wasserzeichen  
 🔥 OnlyFans & Influencer Zugang  
@@ -112,18 +76,16 @@ const PACKAGES = {
 ✨ Tägliche Updates  
 📦 12.000 Inhalte  
 🔓 Vollzugriff auf alle Inhalte  
-👥 Community Zugriff  
 ⬇️ Download-Funktion  
 🚫 Keine Wasserzeichen  
 🔥 OnlyFans & Influencer Zugang  
 📲 Social Media & Snapchat Leaks  
 💬 Private Telegram Gruppe  
-🗳 Votings & Mitbestimmung  
 🎁 Gewinnspiele & Verlosungen  
 🎥 8K Video Qualität  
 🛎 24/7 High-End Support  
 
-👑 Das ultimative Paket.
+👑 KRASSESTES PAKET.
 `
   }
 };
@@ -135,8 +97,6 @@ bot.start((ctx) => {
   ctx.reply(
     "🔥 BRAVE VIP 🔥\n\n🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥉 Bronze ⭐", "PRICE_BRONZE")],
-      [Markup.button.callback("🥈 Silber ⭐", "PRICE_SILBER")],
       [Markup.button.callback("🥇 Gold ⭐", "PRICE_GOLD")],
       [Markup.button.callback("💠 Platin ⭐", "PRICE_PLATIN")],
       [Markup.button.callback("💎 Diamond ⭐", "PRICE_DIAMOND")],
@@ -192,8 +152,6 @@ bot.action("BACK", (ctx) => {
   ctx.reply(
     "🚀 Wähle dein Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥉 Bronze ⭐", "PRICE_BRONZE")],
-      [Markup.button.callback("🥈 Silber ⭐", "PRICE_SILBER")],
       [Markup.button.callback("🥇 Gold ⭐", "PRICE_GOLD")],
       [Markup.button.callback("💠 Platin ⭐", "PRICE_PLATIN")],
       [Markup.button.callback("💎 Diamond ⭐", "PRICE_DIAMOND")],
@@ -203,7 +161,7 @@ bot.action("BACK", (ctx) => {
 });
 
 /* =========================
-   PAYMENT EVENTS
+   PAYMENT
 ========================= */
 bot.on("pre_checkout_query", (ctx) =>
   ctx.answerPreCheckoutQuery(true)
