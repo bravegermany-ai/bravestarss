@@ -45,7 +45,7 @@ bot.start((ctx) => {
     "🔥 BRAVE VIP 🔥\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ Telegram-Sterne – 10 €", "PAY_STARS")],
-      [Markup.button.callback("💳 PayPal – 10 €", "PAY_PAYPAL")],
+      [Markup.button.url("💳 PayPal – 10 €", "https://www.paypal.me/BraveSupport")],
       [Markup.button.callback("🎁 Amazon – 10 €", "PAY_AMAZON")],
       [Markup.button.callback("💰 Paysafecard – 10 €", "PAY_PSC")]
     ])
@@ -53,9 +53,20 @@ bot.start((ctx) => {
 });
 
 /* =========================
-   TELEGRAM STERNE ZAHLUNG
+   TELEGRAM STERNE INFO + ZAHLUNG
 ========================= */
 bot.action("PAY_STARS", async (ctx) => {
+  await ctx.answerCbQuery();
+  return ctx.reply(
+    VIP_CONTENT + "\n\n💳 Klicke unten, um die Zahlung mit 500 Telegram-Sternen zu starten:",
+    Markup.inlineKeyboard([
+      [Markup.button.callback("💎 Jetzt mit 500 Sternen zahlen", "START_STARS_PAYMENT")]
+    ]),
+    { parse_mode: "Markdown" }
+  );
+});
+
+bot.action("START_STARS_PAYMENT", async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
   return ctx.replyWithInvoice({
     title: "VIP – 10 €",
@@ -68,17 +79,8 @@ bot.action("PAY_STARS", async (ctx) => {
 });
 
 /* =========================
-   PAYPAL / AMAZON / PAYSAFE BUTTONS
+   AMAZON / PSC BUTTONS
 ========================= */
-bot.action("PAY_PAYPAL", async (ctx) => {
-  await ctx.answerCbQuery();
-  return ctx.reply(
-    "💳 Bitte zahle 10 € über PayPal: https://www.paypal.me/BraveSupport\n\n" +
-    "📩 Sende danach deinen Zahlungsbeleg direkt an @BraveSupport1.\n\n" +
-    VIP_CONTENT
-  );
-});
-
 bot.action("PAY_AMAZON", async (ctx) => {
   await ctx.answerCbQuery();
   return ctx.reply(
