@@ -12,158 +12,98 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const VIP_GROUP_LINK = "https://t.me/+_Lwkx_EKnd9lMjJh";
 
 /* =========================
-   PAKETE
+   VIP-INHALTE
 ========================= */
-const PACKAGES = {
-  GOLD: {
-    name: "Gold VIP",
-    stars: 1000,
-    info: `
-🥇 GOLD VIP – 25 €
+const VIP_CONTENT = `
+✨ *VIP – 10 €* ✨
 
 ━━━━━━━━━━━━━━━━━━
-📦 INHALTE
-500 Videos & Bilder
+📦 *INHALTE*
+💎 Tägliche Updates
+💰 Inhalt im Wert von 10.000€
+👥 Community Forum
+⬇️ Download-Funktion
+🚫 Keine Wasserzeichen
+⭐ OnlyFans Zugang
+💠 Influencer Zugang
+📲 Social Media Leaks
+👻 Snapchat Leaks Ordner
+🔒 Private Telegram Gruppe
+💬 Live-Chat mit Frauen
+🗳️ Votings & Mitbestimmung
+🎉 Gewinnspiele | Verlosungen
+🎥 8K Video Qualität
+⚡ 24/7 High End Support
 ━━━━━━━━━━━━━━━━━━
-
-✨ Tägliche Updates  
-🔥 Premium Inhalte  
-⭐ OnlyFans Zugang  
-👥 Influencer Inhalte  
-📲 Social Media Leaks  
-🎥 4K Video Qualität  
-⚡ Priority Support
-`
-  },
-  PLATIN: {
-    name: "Platin VIP",
-    stars: 2500,
-    info: `
-💠 PLATIN VIP – 50 €
-
-━━━━━━━━━━━━━━━━━━
-📦 INHALTE
-1.500 Videos & Bilder
-━━━━━━━━━━━━━━━━━━
-
-✨ Tägliche Updates  
-💎 Exklusive Premium Inhalte  
-⭐ OnlyFans & Influencer Zugang  
-📲 Social Media Leaks  
-⬇️ Download-Funktion  
-🚫 Keine Wasserzeichen  
-🎥 4K Video Qualität  
-⚡ Priority Support
-`
-  },
-  DIAMOND: {
-    name: "Diamond VIP",
-    stars: 5000,
-    info: `
-💎 DIAMOND VIP – 100 €
-
-━━━━━━━━━━━━━━━━━━
-📦 INHALTE
-5.000 Videos & Bilder
-━━━━━━━━━━━━━━━━━━
-
-✨ Tägliche Updates  
-🔓 Vollzugriff auf Inhalte  
-⭐ OnlyFans & Influencer Zugang  
-📲 Social Media Leaks  
-⬇️ Download-Funktion  
-🚫 Keine Wasserzeichen  
-💬 Live-Chat Zugriff  
-🎥 4K Video Qualität  
-⚡ Priority Support
-`
-  }
-};
+`;
 
 /* =========================
    START
 ========================= */
 bot.start((ctx) => {
   ctx.reply(
-    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle dein Paket:",
+    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle deine Zahlungsmethode:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold – 25 € ⭐️", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin – 50 € ⭐️", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
+      [Markup.button.callback("⭐ Telegram-Sterne – 10 €", "PAY_STARS")],
+      [Markup.button.callback("💳 PayPal", "PAY_PAYPAL")],
+      [Markup.button.callback("🎁 Amazon", "PAY_AMAZON")],
+      [Markup.button.callback("💰 Paysafecard", "PAY_PSC")]
     ])
   );
 });
 
 /* =========================
-   PAKET INFO
+   TELEGRAM STERNE ZAHLUNG
 ========================= */
-bot.action(/PRICE_(.+)/, async (ctx) => {
-  const key = ctx.match[1];
-  const pkg = PACKAGES[key];
-  if (!pkg) return;
-
-  await ctx.answerCbQuery();
-
-  return ctx.reply(
-    pkg.info,
-    Markup.inlineKeyboard([
-      [Markup.button.callback("🛒 JETZT KAUFEN ⭐️", `BUY_${key}`)],
-      [Markup.button.callback("⬅️ Zurück ⭐️", "BACK")]
-    ])
-  );
-});
-
-/* =========================
-   ZAHLUNG
-========================= */
-bot.action(/BUY_(.+)/, async (ctx) => {
-  const key = ctx.match[1];
-  const pkg = PACKAGES[key];
-  if (!pkg) return;
-
+bot.action("PAY_STARS", async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
-
   return ctx.replyWithInvoice({
-    title: pkg.name,
-    description: `BRAVE VIP – ${pkg.name}`,
-    payload: `${key}_${ctx.from.id}`,
+    title: "VIP",
+    description: "BRAVE VIP – 10 €",
+    payload: `VIP_${ctx.from.id}`,
     provider_token: "", // BOTFATHER PAYMENT TOKEN
     currency: "XTR",
-    prices: [{ label: pkg.name, amount: pkg.stars }]
+    prices: [{ label: "VIP – 500 Sterne", amount: 500 }]
   });
 });
 
 /* =========================
-   ZURÜCK
+   PAYPAL / AMAZON / PAYSAFE BUTTONS
 ========================= */
-bot.action("BACK", (ctx) => {
-  ctx.answerCbQuery();
-  ctx.reply(
-    "🚀 Wähle dein Paket:",
-    Markup.inlineKeyboard([
-      [Markup.button.callback("🥇 Gold – 25 € ⭐️", "PRICE_GOLD")],
-      [Markup.button.callback("💠 Platin – 50 € ⭐️", "PRICE_PLATIN")],
-      [Markup.button.callback("💎 Diamond – 100 € ⭐️", "PRICE_DIAMOND")]
-    ])
+bot.action("PAY_PAYPAL", async (ctx) => {
+  await ctx.answerCbQuery();
+  return ctx.reply(
+    "💳 Bitte zahle über PayPal: https://www.paypal.me/BraveSupport\n\n" +
+    "📩 Sende danach deinen Zahlungsbeleg direkt an @BraveSupport1, damit dein VIP-Zugang freigeschaltet werden kann."
+  );
+});
+
+bot.action("PAY_AMAZON", async (ctx) => {
+  await ctx.answerCbQuery();
+  return ctx.reply(
+    "🎁 Bitte sende deinen Amazon-Gutschein-Code oder Screenshot direkt an @BraveSupport1, damit dein VIP-Zugang freigeschaltet werden kann."
+  );
+});
+
+bot.action("PAY_PSC", async (ctx) => {
+  await ctx.answerCbQuery();
+  return ctx.reply(
+    "💰 Bitte sende deinen Paysafecard-Code direkt an @BraveSupport1, damit dein VIP-Zugang freigeschaltet werden kann."
   );
 });
 
 /* =========================
-   PAYMENT EVENTS
+   PAYMENT EVENTS (STARS)
 ========================= */
-bot.on("pre_checkout_query", (ctx) =>
-  ctx.answerPreCheckoutQuery(true)
-);
+bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
-    "✅ Zahlung erfolgreich!\n\n👉 Klicke unten, um eine Beitrittsanfrage zur VIP-Gruppe zu senden:",
+    "✅ Zahlung erfolgreich!\n\n" +
+    "👉 Klicke unten, um deine VIP-Inhalte zu erhalten:",
     Markup.inlineKeyboard([
       [
-        Markup.button.url(
-          "⭐️ ZUR VIP-GRUPPE ⭐️",
-          VIP_GROUP_LINK
-        )
+        Markup.button.url("⭐ VIP-GRUPPE ⭐", VIP_GROUP_LINK)
       ]
     ])
   );
