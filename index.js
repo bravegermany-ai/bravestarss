@@ -42,28 +42,29 @@ const VIP_CONTENT = `
 ========================= */
 bot.start((ctx) => {
   ctx.reply(
-    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
+    VIP_CONTENT + "\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ Telegram-Sterne – 10 €", "PAY_STARS")],
-      [Markup.button.url("💳 PayPal – 10 €", "https://www.paypal.me/BraveSupport")],
+      [Markup.button.callback("💳 PayPal – 10 €", "PAY_PAYPAL")],
       [Markup.button.callback("🎁 Amazon – 10 €", "PAY_AMAZON")],
       [Markup.button.callback("💰 Paysafecard – 10 €", "PAY_PSC")]
-    ])
+    ]),
+    { parse_mode: "Markdown" }
   );
 });
 
 /* =========================
-   TELEGRAM STERNE INFO + ZAHLUNG
+   TELEGRAM STERNE ZAHLUNG
 ========================= */
 bot.action("PAY_STARS", async (ctx) => {
   await ctx.answerCbQuery();
   return ctx.reply(
-    VIP_CONTENT + "\n\n💳 Klicke unten, um die Zahlung mit 500 Telegram-Sternen zu starten:",
+    "💎 Um VIP zu werden, bezahle 500 Telegram-Sterne.\n\n" +
+    "💳 Klicke unten, um die Zahlung zu starten:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("💎 Jetzt mit 500 Sternen zahlen", "START_STARS_PAYMENT")],
+      [Markup.button.callback("Jetzt mit 500 Sternen zahlen", "START_STARS_PAYMENT")],
       [Markup.button.callback("⬅️ Zurück", "BACK")]
-    ]),
-    { parse_mode: "Markdown" }
+    ])
   );
 });
 
@@ -80,29 +81,42 @@ bot.action("START_STARS_PAYMENT", async (ctx) => {
 });
 
 /* =========================
-   AMAZON / PSC BUTTONS
+   PAYPAL INFO
+========================= */
+bot.action("PAY_PAYPAL", async (ctx) => {
+  await ctx.answerCbQuery();
+  return ctx.reply(
+    "💳 Bitte zahle 10 € über PayPal:\nhttps://www.paypal.me/BraveSupport\n\n" +
+    "📩 Sende danach deinen Zahlungsbeleg direkt an @BraveSupport1.",
+    Markup.inlineKeyboard([
+      [Markup.button.callback("⬅️ Zurück", "BACK")]
+    ])
+  );
+});
+
+/* =========================
+   AMAZON INFO
 ========================= */
 bot.action("PAY_AMAZON", async (ctx) => {
   await ctx.answerCbQuery();
   return ctx.reply(
-    "🎁 Bitte sende deinen Amazon-Gutschein-Code oder Screenshot (10 €) direkt an @BraveSupport1.\n\n" +
-    VIP_CONTENT,
+    "🎁 Bitte sende deinen Amazon-Gutschein-Code oder Screenshot (10 €) direkt an @BraveSupport1.",
     Markup.inlineKeyboard([
       [Markup.button.callback("⬅️ Zurück", "BACK")]
-    ]),
-    { parse_mode: "Markdown" }
+    ])
   );
 });
 
+/* =========================
+   PSC INFO
+========================= */
 bot.action("PAY_PSC", async (ctx) => {
   await ctx.answerCbQuery();
   return ctx.reply(
-    "💰 Bitte sende deinen Paysafecard-Code (10 €) direkt an @BraveSupport1.\n\n" +
-    VIP_CONTENT,
+    "💰 Bitte sende deinen Paysafecard-Code (10 €) direkt an @BraveSupport1.",
     Markup.inlineKeyboard([
       [Markup.button.callback("⬅️ Zurück", "BACK")]
-    ]),
-    { parse_mode: "Markdown" }
+    ])
   );
 });
 
@@ -112,13 +126,14 @@ bot.action("PAY_PSC", async (ctx) => {
 bot.action("BACK", (ctx) => {
   ctx.answerCbQuery();
   ctx.reply(
-    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
+    VIP_CONTENT + "\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ Telegram-Sterne – 10 €", "PAY_STARS")],
-      [Markup.button.url("💳 PayPal – 10 €", "https://www.paypal.me/BraveSupport")],
+      [Markup.button.callback("💳 PayPal – 10 €", "PAY_PAYPAL")],
       [Markup.button.callback("🎁 Amazon – 10 €", "PAY_AMAZON")],
       [Markup.button.callback("💰 Paysafecard – 10 €", "PAY_PSC")]
-    ])
+    ]),
+    { parse_mode: "Markdown" }
   );
 });
 
