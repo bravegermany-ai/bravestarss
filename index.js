@@ -42,12 +42,12 @@ const VIP_CONTENT = `
 ========================= */
 bot.start((ctx) => {
   ctx.reply(
-    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle deine Zahlungsmethode:",
+    "🔥 BRAVE VIP 🔥\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ Telegram-Sterne – 10 €", "PAY_STARS")],
-      [Markup.button.callback("💳 PayPal", "PAY_PAYPAL")],
-      [Markup.button.callback("🎁 Amazon", "PAY_AMAZON")],
-      [Markup.button.callback("💰 Paysafecard", "PAY_PSC")]
+      [Markup.button.callback("💳 PayPal – 10 €", "PAY_PAYPAL")],
+      [Markup.button.callback("🎁 Amazon – 10 €", "PAY_AMAZON")],
+      [Markup.button.callback("💰 Paysafecard – 10 €", "PAY_PSC")]
     ])
   );
 });
@@ -58,7 +58,7 @@ bot.start((ctx) => {
 bot.action("PAY_STARS", async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
   return ctx.replyWithInvoice({
-    title: "VIP",
+    title: "VIP – 10 €",
     description: "BRAVE VIP – 10 €",
     payload: `VIP_${ctx.from.id}`,
     provider_token: "", // BOTFATHER PAYMENT TOKEN
@@ -73,22 +73,25 @@ bot.action("PAY_STARS", async (ctx) => {
 bot.action("PAY_PAYPAL", async (ctx) => {
   await ctx.answerCbQuery();
   return ctx.reply(
-    "💳 Bitte zahle über PayPal: https://www.paypal.me/BraveSupport\n\n" +
-    "📩 Sende danach deinen Zahlungsbeleg direkt an @BraveSupport1, damit dein VIP-Zugang freigeschaltet werden kann."
+    "💳 Bitte zahle 10 € über PayPal: https://www.paypal.me/BraveSupport\n\n" +
+    "📩 Sende danach deinen Zahlungsbeleg direkt an @BraveSupport1.\n\n" +
+    VIP_CONTENT
   );
 });
 
 bot.action("PAY_AMAZON", async (ctx) => {
   await ctx.answerCbQuery();
   return ctx.reply(
-    "🎁 Bitte sende deinen Amazon-Gutschein-Code oder Screenshot direkt an @BraveSupport1, damit dein VIP-Zugang freigeschaltet werden kann."
+    "🎁 Bitte sende deinen Amazon-Gutschein-Code oder Screenshot (10 €) direkt an @BraveSupport1.\n\n" +
+    VIP_CONTENT
   );
 });
 
 bot.action("PAY_PSC", async (ctx) => {
   await ctx.answerCbQuery();
   return ctx.reply(
-    "💰 Bitte sende deinen Paysafecard-Code direkt an @BraveSupport1, damit dein VIP-Zugang freigeschaltet werden kann."
+    "💰 Bitte sende deinen Paysafecard-Code (10 €) direkt an @BraveSupport1.\n\n" +
+    VIP_CONTENT
   );
 });
 
@@ -99,13 +102,13 @@ bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
-    "✅ Zahlung erfolgreich!\n\n" +
-    "👉 Klicke unten, um deine VIP-Inhalte zu erhalten:",
+    "✅ Zahlung erfolgreich! (10 €)\n\n" +
+    VIP_CONTENT +
+    "\n\n👉 Klicke unten, um deine VIP-Gruppe zu betreten:",
     Markup.inlineKeyboard([
-      [
-        Markup.button.url("⭐ VIP-GRUPPE ⭐", VIP_GROUP_LINK)
-      ]
-    ])
+      [Markup.button.url("⭐ VIP-GRUPPE ⭐", VIP_GROUP_LINK)]
+    ]),
+    { parse_mode: "Markdown" }
   );
 });
 
