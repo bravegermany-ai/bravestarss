@@ -12,38 +12,56 @@ bot.start((ctx) => {
   ctx.reply(
     `👋 Willkommen bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_VIP")],
-      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_ULTRA")],
-      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_ULTRAPRO")],
-      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_ULTIMATE")],
+      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "PAY_1500")],
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "PAY_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "PAY_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "PAY_7500")],
       [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")]
     ])
   );
 });
 
 /* =========================
-   STERNE-STUFEN (Kontakt mit Admin)
+   STAR PAYMENT (direkt bezahlen)
 ========================= */
-const STAR_MESSAGES: { [key: string]: string } = {
-  STAR_VIP: "⭐️ VIP – 1.500 Stars\n💳 Bitte schreibe zuerst an @BraveSupport1, um die Zahlung zu starten\n📩 Bei Problemen kontaktiere @BraveSupport1",
-  STAR_ULTRA: "⭐️ Ultra – 2.500 Stars\n💳 Bitte schreibe zuerst an @BraveSupport1, um die Zahlung zu starten\n📩 Bei Problemen kontaktiere @BraveSupport1",
-  STAR_ULTRAPRO: "⭐️ Ultra Pro – 5.000 Stars\n💳 Bitte schreibe zuerst an @BraveSupport1, um die Zahlung zu starten\n📩 Bei Problemen kontaktiere @BraveSupport1",
-  STAR_ULTIMATE: "🔞 Ultimate – 7.500 Stars\n💳 Bitte schreibe zuerst an @BraveSupport1, um die Zahlung zu starten\n📩 Bei Problemen kontaktiere @BraveSupport1",
+const STAR_PRICES = {
+  PAY_1500: 1500,
+  PAY_2500: 2500,
+  PAY_5000: 5000,
+  PAY_7500: 7500,
 };
 
-bot.action(/STAR_.+/, async (ctx) => {
-  await ctx.answerCbQuery();
-  const msg = STAR_MESSAGES[ctx.match[0]];
-  if (msg) {
-    ctx.reply(msg);
-  }
+bot.action(/PAY_\d+/, async (ctx) => {
+  await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
+  const stars = STAR_PRICES[ctx.match[0]];
+
+  return ctx.replyWithInvoice({
+    title: `VIP – ${stars} Stars`,
+    description: `VIP-Zugang mit ${stars} Telegram-Sternen`,
+    payload: `VIP_${stars}_${ctx.from.id}`,
+    provider_token: "", // HIER DEIN BOTFATHER PAYMENT TOKEN
+    currency: "XTR", // Telegram-Sterne
+    prices: [{ label: `VIP – ${stars} Stars`, amount: stars }]
+  });
+});
+
+/* =========================
+   PAYMENT EVENTS (STARS)
+========================= */
+bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
+
+bot.on("successful_payment", async (ctx) => {
+  await ctx.reply(
+    "✅ Zahlung erfolgreich!\n\n" +
+    "Bitte kontaktiere jetzt @BraveSupport1, um deinen Zugang freizuschalten."
+  );
 });
 
 /* =========================
    WEITERE ZAHLUNGEN (EURO)
 ========================= */
-bot.action("OTHER_PAYMENTS", async (ctx) => {
-  await ctx.answerCbQuery();
+bot.action("OTHER_PAYMENTS", (ctx) => {
+  ctx.answerCbQuery();
   ctx.reply(
     "💳 Wähle deinen Plan (Euro-Preise):",
     Markup.inlineKeyboard([
@@ -59,34 +77,39 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
 /* =========================
    EURO-ZAHLUNGSINFOS (kein Link)
 ========================= */
-const EURO_MESSAGES: { [key: string]: string } = {
-  PAY_VIP_EU: "⭐️ VIP – 25 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1",
-  PAY_ULTRA_EU: "⭐️ Ultra – 50 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1",
-  PAY_ULTRAPRO_EU: "⭐️ Ultra Pro – 100 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1",
-  PAY_ULTIMATE_EU: "🔞 Ultimate – 150 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1",
-};
+bot.action("PAY_VIP_EU", (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("⭐️ VIP – 25 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
 
-bot.action(/PAY_.+/, async (ctx) => {
-  await ctx.answerCbQuery();
-  const msg = EURO_MESSAGES[ctx.match[0]];
-  if (msg) {
-    ctx.reply(msg);
-  }
+bot.action("PAY_ULTRA_EU", (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("⭐️ Ultra – 50 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action("PAY_ULTRAPRO_EU", (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("⭐️ Ultra Pro – 100 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action("PAY_ULTIMATE_EU", (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("🔞 Ultimate – 150 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
 });
 
 /* =========================
    ZURÜCK BUTTON
 ========================= */
-bot.action("BACK_TO_START", async (ctx) => {
-  await ctx.answerCbQuery();
+bot.action("BACK_TO_START", (ctx) => {
+  ctx.answerCbQuery();
   const username = ctx.from.first_name || "User";
   ctx.reply(
     `👋 Willkommen zurück bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_VIP")],
-      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_ULTRA")],
-      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_ULTRAPRO")],
-      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_ULTIMATE")],
+      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "PAY_1500")],
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "PAY_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "PAY_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "PAY_7500")],
       [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")]
     ])
   );
