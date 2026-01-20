@@ -1,139 +1,117 @@
 import { Telegraf, Markup } from "telegraf";
 
-if (!process.env.BOT_TOKEN) {
-  throw new Error("BOT_TOKEN fehlt");
-}
+if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN fehlt");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-
-/* =========================
-   KONFIG
-========================= */
-const VIP_GROUP_LINK = "https://t.me/+_Lwkx_EKnd9lMjJh";
-
-/* =========================
-   VIP-INHALTE
-========================= */
-const VIP_CONTENT = `
-✨ *VIP – 10 €* ✨
-
-━━━━━━━━━━━━━━━━━━
-📦 *INHALTE*
-💎 Tägliche Updates
-💰 Inhalt im Wert von 10.000€
-👥 Community Forum
-⬇️ Download-Funktion
-🚫 Keine Wasserzeichen
-⭐ OnlyFans Zugang
-💠 Influencer Zugang
-📲 Social Media Leaks
-👻 Snapchat Leaks Ordner
-🔒 Private Telegram Gruppe
-💬 Live-Chat mit Frauen
-🗳️ Votings & Mitbestimmung
-🎉 Gewinnspiele | Verlosungen
-🎥 8K Video Qualität
-⚡ 24/7 High End Support
-━━━━━━━━━━━━━━━━━━
-`;
 
 /* =========================
    START
 ========================= */
 bot.start((ctx) => {
+  const username = ctx.from.first_name || "User";
   ctx.reply(
-    VIP_CONTENT + "\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
+    `👋 Willkommen bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ Telegram-Sterne – 10 €", "PAY_STARS")],
-      [Markup.button.callback("💳 PayPal – 10 €", "PAY_PAYPAL")],
-      [Markup.button.callback("🎁 Amazon – 10 €", "PAY_AMAZON")],
-      [Markup.button.callback("💰 Paysafecard – 10 €", "PAY_PSC")]
-    ]),
-    { parse_mode: "Markdown" }
-  );
-});
-
-/* =========================
-   TELEGRAM STERNE ZAHLUNG
-========================= */
-bot.action("PAY_STARS", async (ctx) => {
-  await ctx.answerCbQuery();
-  return ctx.reply(
-    "💎 Um VIP zu werden, bezahle 500 Telegram-Sterne.\n\n" +
-    "💳 Klicke unten, um die Zahlung zu starten:",
-    Markup.inlineKeyboard([
-      [Markup.button.callback("Jetzt mit 500 Sternen zahlen", "START_STARS_PAYMENT")],
-      [Markup.button.callback("⬅️ Zurück", "BACK")]
+      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "PAY_1500")],
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "PAY_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "PAY_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "PAY_7500")],
+      [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")]
     ])
   );
 });
 
-bot.action("START_STARS_PAYMENT", async (ctx) => {
+/* =========================
+   STAR PAYMENT ACTIONS
+========================= */
+const STAR_PRICES = {
+  PAY_1500: 1500,
+  PAY_2500: 2500,
+  PAY_5000: 5000,
+  PAY_7500: 7500,
+};
+
+bot.action(/PAY_\d+/, async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
+  const stars = STAR_PRICES[ctx.match[0]];
+
   return ctx.replyWithInvoice({
-    title: "VIP – 10 €",
-    description: "BRAVE VIP – 10 €",
-    payload: `VIP_${ctx.from.id}`,
+    title: `VIP – ${stars} Stars`,
+    description: `VIP-Zugang mit ${stars} Telegram-Sternen`,
+    payload: `VIP_${stars}_${ctx.from.id}`,
     provider_token: "", // BOTFATHER PAYMENT TOKEN
-    currency: "XTR",
-    prices: [{ label: "VIP – 500 Sterne", amount: 500 }]
+    currency: "XTR", // Prüfen, ob Telegram-Sterne möglich sind
+    prices: [{ label: `VIP – ${stars} Stars`, amount: stars }]
   });
 });
 
 /* =========================
-   PAYPAL INFO
+   WEITERE ZAHLUNGEN (EURO)
 ========================= */
-bot.action("PAY_PAYPAL", async (ctx) => {
+bot.action("OTHER_PAYMENTS", async (ctx) => {
   await ctx.answerCbQuery();
-  return ctx.reply(
-    "💳 Bitte zahle 10 € über PayPal:\nhttps://www.paypal.me/BraveSupport\n\n" +
-    "📩 Sende danach deinen Zahlungsbeleg direkt an @BraveSupport1.",
+  ctx.reply(
+    "💳 Wähle deinen Plan (Euro-Preise):",
     Markup.inlineKeyboard([
-      [Markup.button.callback("⬅️ Zurück", "BACK")]
+      [Markup.button.callback("⭐️ VIP – 25 €", "PAY_VIP_EU")],
+      [Markup.button.callback("⭐️ Ultra – 50 €", "PAY_ULTRA_EU")],
+      [Markup.button.callback("⭐️ Ultra Pro – 100 €", "PAY_ULTRAPRO_EU")],
+      [Markup.button.callback("🔞 Ultimate – 150 €", "PAY_ULTIMATE_EU")],
+      [Markup.button.callback("⬅️ Zurück", "BACK_TO_START")]
     ])
   );
 });
 
 /* =========================
-   AMAZON INFO
+   EURO-ZAHLUNGSINFOS
 ========================= */
-bot.action("PAY_AMAZON", async (ctx) => {
+bot.action("PAY_VIP_EU", async (ctx) => {
   await ctx.answerCbQuery();
-  return ctx.reply(
-    "🎁 Bitte sende deinen Amazon-Gutschein-Code oder Screenshot (10 €) direkt an @BraveSupport1.",
-    Markup.inlineKeyboard([
-      [Markup.button.callback("⬅️ Zurück", "BACK")]
-    ])
+  ctx.reply(
+    "💳 VIP – 25 €\nBitte zahle an PayPal: https://www.paypal.me/BraveSupport\n\n" +
+    "📩 Bei Problemen kontaktiere @BraveSupport1"
   );
 });
 
-/* =========================
-   PSC INFO
-========================= */
-bot.action("PAY_PSC", async (ctx) => {
+bot.action("PAY_ULTRA_EU", async (ctx) => {
   await ctx.answerCbQuery();
-  return ctx.reply(
-    "💰 Bitte sende deinen Paysafecard-Code (10 €) direkt an @BraveSupport1.",
-    Markup.inlineKeyboard([
-      [Markup.button.callback("⬅️ Zurück", "BACK")]
-    ])
+  ctx.reply(
+    "💳 Ultra – 50 €\nBitte zahle an PayPal: https://www.paypal.me/BraveSupport\n\n" +
+    "📩 Bei Problemen kontaktiere @BraveSupport1"
+  );
+});
+
+bot.action("PAY_ULTRAPRO_EU", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply(
+    "💳 Ultra Pro – 100 €\nBitte zahle an PayPal: https://www.paypal.me/BraveSupport\n\n" +
+    "📩 Bei Problemen kontaktiere @BraveSupport1"
+  );
+});
+
+bot.action("PAY_ULTIMATE_EU", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply(
+    "🔞 Ultimate – 150 €\nBitte zahle an PayPal: https://www.paypal.me/BraveSupport\n\n" +
+    "📩 Bei Problemen kontaktiere @BraveSupport1"
   );
 });
 
 /* =========================
    ZURÜCK BUTTON
 ========================= */
-bot.action("BACK", (ctx) => {
-  ctx.answerCbQuery();
+bot.action("BACK_TO_START", async (ctx) => {
+  await ctx.answerCbQuery();
+  const username = ctx.from.first_name || "User";
   ctx.reply(
-    VIP_CONTENT + "\n\n🚀 Wähle deine Zahlungsmethode (alle 10 €):",
+    `👋 Willkommen zurück bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ Telegram-Sterne – 10 €", "PAY_STARS")],
-      [Markup.button.callback("💳 PayPal – 10 €", "PAY_PAYPAL")],
-      [Markup.button.callback("🎁 Amazon – 10 €", "PAY_AMAZON")],
-      [Markup.button.callback("💰 Paysafecard – 10 €", "PAY_PSC")]
-    ]),
-    { parse_mode: "Markdown" }
+      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "PAY_1500")],
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "PAY_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "PAY_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "PAY_7500")],
+      [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")]
+    ])
   );
 });
 
@@ -144,13 +122,9 @@ bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
-    "✅ Zahlung erfolgreich! (10 €)\n\n" +
-    VIP_CONTENT +
-    "\n\n👉 Klicke unten, um deine VIP-Gruppe zu betreten:",
-    Markup.inlineKeyboard([
-      [Markup.button.url("⭐ VIP-GRUPPE ⭐", VIP_GROUP_LINK)]
-    ]),
-    { parse_mode: "Markdown" }
+    "✅ Zahlung erfolgreich!\n\n" +
+    "👉 Hier ist dein VIP-Zugang:\n" +
+    "https://t.me/+_Lwkx_EKnd9lMjJh"
   );
 });
 
