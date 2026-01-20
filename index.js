@@ -22,7 +22,7 @@ bot.start((ctx) => {
 });
 
 /* =========================
-   STAR PAYMENT (direkt bezahlen)
+   STAR PAYMENT
 ========================= */
 const STAR_PRICES = {
   STAR_1500: 1500,
@@ -39,8 +39,8 @@ bot.action(/STAR_\d+/, async (ctx) => {
     title: `VIP – ${stars} Stars`,
     description: `VIP-Zugang mit ${stars} Telegram-Sternen`,
     payload: `VIP_${stars}_${ctx.from.id}`,
-    provider_token: "", // HIER DEIN BOTFATHER PAYMENT TOKEN
-    currency: "XTR", // Telegram-Sterne
+    provider_token: "", // BOTFATHER PAYMENT TOKEN
+    currency: "XTR",
     prices: [{ label: `VIP – ${stars} Stars`, amount: stars }]
   });
 });
@@ -54,10 +54,10 @@ bot.on("successful_payment", async (ctx) => {
 });
 
 /* =========================
-   WEITERE ZAHLUNGEN (EURO)
+   EURO STUFEN
 ========================= */
-bot.action("OTHER_PAYMENTS", (ctx) => {
-  ctx.answerCbQuery();
+bot.action("OTHER_PAYMENTS", async (ctx) => {
+  await ctx.answerCbQuery();
   ctx.reply(
     "💳 Wähle deinen Plan (Euro-Preise):",
     Markup.inlineKeyboard([
@@ -71,51 +71,104 @@ bot.action("OTHER_PAYMENTS", (ctx) => {
 });
 
 /* =========================
-   EURO-STUFEN → ZAHLUNGSMETHODEN
+   EURO → ZAHLUNGSMETHODEN
 ========================= */
-const EURO_PRICES = {
-  EU_VIP: 25,
-  EU_ULTRA: 50,
-  EU_ULTRAPRO: 100,
-  EU_ULTIMATE: 150
-};
-
-const EURO_NAMES = {
-  EU_VIP: "VIP",
-  EU_ULTRA: "Ultra",
-  EU_ULTRAPRO: "Ultra Pro",
-  EU_ULTIMATE: "Ultimate"
-};
-
-bot.action(/EU_.+/, async (ctx) => {
+bot.action("EU_VIP", async (ctx) => {
   await ctx.answerCbQuery();
-  const price = EURO_PRICES[ctx.match[0]];
-  const name = EURO_NAMES[ctx.match[0]];
-
   ctx.reply(
-    `💳 ${name} – ${price} €\nWähle die Zahlungsmethode:`,
+    "⭐️ VIP – 25 €\nWähle die Zahlungsmethode:",
     Markup.inlineKeyboard([
-      [Markup.button.url("💳 PayPal", `https://www.paypal.me/BraveSupport/${price}`)],
-      [Markup.button.callback("🎁 Amazon", `AMAZON_${ctx.match[0]}`)],
-      [Markup.button.callback("💰 Paysafecard", `PSC_${ctx.match[0]}`)],
+      [Markup.button.url("💳 PayPal", "https://www.paypal.me/BraveSupport/25")],
+      [Markup.button.callback("🎁 Amazon", "AMAZON_EU_VIP")],
+      [Markup.button.callback("💰 Paysafecard", "PSC_EU_VIP")],
+      [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
+    ])
+  );
+});
+
+bot.action("EU_ULTRA", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply(
+    "⭐️ Ultra – 50 €\nWähle die Zahlungsmethode:",
+    Markup.inlineKeyboard([
+      [Markup.button.url("💳 PayPal", "https://www.paypal.me/BraveSupport/50")],
+      [Markup.button.callback("🎁 Amazon", "AMAZON_EU_ULTRA")],
+      [Markup.button.callback("💰 Paysafecard", "PSC_EU_ULTRA")],
+      [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
+    ])
+  );
+});
+
+bot.action("EU_ULTRAPRO", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply(
+    "⭐️ Ultra Pro – 100 €\nWähle die Zahlungsmethode:",
+    Markup.inlineKeyboard([
+      [Markup.button.url("💳 PayPal", "https://www.paypal.me/BraveSupport/100")],
+      [Markup.button.callback("🎁 Amazon", "AMAZON_EU_ULTRAPRO")],
+      [Markup.button.callback("💰 Paysafecard", "PSC_EU_ULTRAPRO")],
+      [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
+    ])
+  );
+});
+
+bot.action("EU_ULTIMATE", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply(
+    "🔞 Ultimate – 150 €\nWähle die Zahlungsmethode:",
+    Markup.inlineKeyboard([
+      [Markup.button.url("💳 PayPal", "https://www.paypal.me/BraveSupport/150")],
+      [Markup.button.callback("🎁 Amazon", "AMAZON_EU_ULTIMATE")],
+      [Markup.button.callback("💰 Paysafecard", "PSC_EU_ULTIMATE")],
       [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
     ])
   );
 });
 
 /* =========================
-   AMAZON / PSC → HINWEIS
+   AMAZON HINWEISE
 ========================= */
-bot.action(/AMAZON_.+/, async (ctx) => {
+bot.action("AMAZON_EU_VIP", async (ctx) => {
   await ctx.answerCbQuery();
-  const price = EURO_PRICES[ctx.match[0]];
-  ctx.reply(`🎁 Bitte sende einen Amazon-Gutschein im Wert von ${price} € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1`);
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 25 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
 });
 
-bot.action(/PSC_.+/, async (ctx) => {
+bot.action("AMAZON_EU_ULTRA", async (ctx) => {
   await ctx.answerCbQuery();
-  const price = EURO_PRICES[ctx.match[0]];
-  ctx.reply(`💰 Bitte sende eine Paysafecard im Wert von ${price} € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1`);
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 50 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action("AMAZON_EU_ULTRAPRO", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 100 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action("AMAZON_EU_ULTIMATE", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 150 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+/* =========================
+   PSC HINWEISE
+========================= */
+bot.action("PSC_EU_VIP", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 25 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action("PSC_EU_ULTRA", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 50 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action("PSC_EU_ULTRAPRO", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 100 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action("PSC_EU_ULTIMATE", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 150 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
 });
 
 /* =========================
