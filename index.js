@@ -73,22 +73,29 @@ bot.action("OTHER_PAYMENTS", (ctx) => {
 /* =========================
    EURO-STUFEN → ZAHLUNGSMETHODEN
 ========================= */
-const EURO_PAYMENTS = {
+const EURO_PRICES = {
   EU_VIP: 25,
   EU_ULTRA: 50,
   EU_ULTRAPRO: 100,
   EU_ULTIMATE: 150
 };
 
-bot.action(/EU_.+/, (ctx) => {
-  ctx.answerCbQuery();
-  const price = EURO_PAYMENTS[ctx.match[0]];
-  const name = ctx.match[0].replace("EU_", "");
-  
+const EURO_NAMES = {
+  EU_VIP: "VIP",
+  EU_ULTRA: "Ultra",
+  EU_ULTRAPRO: "Ultra Pro",
+  EU_ULTIMATE: "Ultimate"
+};
+
+bot.action(/EU_.+/, async (ctx) => {
+  await ctx.answerCbQuery();
+  const price = EURO_PRICES[ctx.match[0]];
+  const name = EURO_NAMES[ctx.match[0]];
+
   ctx.reply(
     `💳 ${name} – ${price} €\nWähle die Zahlungsmethode:`,
     Markup.inlineKeyboard([
-      [Markup.button.url("💳 PayPal", "https://www.paypal.me/BraveSupport")],
+      [Markup.button.url("💳 PayPal", `https://www.paypal.me/BraveSupport/${price}`)],
       [Markup.button.callback("🎁 Amazon", `AMAZON_${ctx.match[0]}`)],
       [Markup.button.callback("💰 Paysafecard", `PSC_${ctx.match[0]}`)],
       [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
@@ -99,21 +106,23 @@ bot.action(/EU_.+/, (ctx) => {
 /* =========================
    AMAZON / PSC → HINWEIS
 ========================= */
-bot.action(/AMAZON_.+/, (ctx) => {
-  ctx.answerCbQuery();
-  ctx.reply("🎁 Bitte sende den Betrag an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+bot.action(/AMAZON_.+/, async (ctx) => {
+  await ctx.answerCbQuery();
+  const price = EURO_PRICES[ctx.match[0]];
+  ctx.reply(`🎁 Bitte sende einen Amazon-Gutschein im Wert von ${price} € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1`);
 });
 
-bot.action(/PSC_.+/, (ctx) => {
-  ctx.answerCbQuery();
-  ctx.reply("💰 Bitte sende den Betrag an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+bot.action(/PSC_.+/, async (ctx) => {
+  await ctx.answerCbQuery();
+  const price = EURO_PRICES[ctx.match[0]];
+  ctx.reply(`💰 Bitte sende eine Paysafecard im Wert von ${price} € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1`);
 });
 
 /* =========================
    BACK BUTTON
 ========================= */
-bot.action("BACK_TO_START", (ctx) => {
-  ctx.answerCbQuery();
+bot.action("BACK_TO_START", async (ctx) => {
+  await ctx.answerCbQuery();
   const username = ctx.from.first_name || "User";
   ctx.reply(
     `👋 Willkommen zurück bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
