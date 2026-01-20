@@ -12,10 +12,10 @@ bot.start((ctx) => {
   ctx.reply(
     `👋 Willkommen bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "PAY_1500")],
-      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "PAY_2500")],
-      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "PAY_5000")],
-      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "PAY_7500")],
+      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_7500")],
       [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")]
     ])
   );
@@ -25,13 +25,13 @@ bot.start((ctx) => {
    STAR PAYMENT (direkt bezahlen)
 ========================= */
 const STAR_PRICES = {
-  PAY_1500: 1500,
-  PAY_2500: 2500,
-  PAY_5000: 5000,
-  PAY_7500: 7500,
+  STAR_1500: 1500,
+  STAR_2500: 2500,
+  STAR_5000: 5000,
+  STAR_7500: 7500,
 };
 
-bot.action(/PAY_\d+/, async (ctx) => {
+bot.action(/STAR_\d+/, async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
   const stars = STAR_PRICES[ctx.match[0]];
 
@@ -45,15 +45,11 @@ bot.action(/PAY_\d+/, async (ctx) => {
   });
 });
 
-/* =========================
-   PAYMENT EVENTS (STARS)
-========================= */
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
-    "✅ Zahlung erfolgreich!\n\n" +
-    "Bitte kontaktiere jetzt @BraveSupport1, um deinen Zugang freizuschalten."
+    "✅ Zahlung erfolgreich!\n\nBitte kontaktiere jetzt @BraveSupport1, um deinen Zugang freizuschalten."
   );
 });
 
@@ -65,40 +61,56 @@ bot.action("OTHER_PAYMENTS", (ctx) => {
   ctx.reply(
     "💳 Wähle deinen Plan (Euro-Preise):",
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP – 25 €", "PAY_VIP_EU")],
-      [Markup.button.callback("⭐️ Ultra – 50 €", "PAY_ULTRA_EU")],
-      [Markup.button.callback("⭐️ Ultra Pro – 100 €", "PAY_ULTRAPRO_EU")],
-      [Markup.button.callback("🔞 Ultimate – 150 €", "PAY_ULTIMATE_EU")],
+      [Markup.button.callback("⭐️ VIP – 25 €", "EU_VIP")],
+      [Markup.button.callback("⭐️ Ultra – 50 €", "EU_ULTRA")],
+      [Markup.button.callback("⭐️ Ultra Pro – 100 €", "EU_ULTRAPRO")],
+      [Markup.button.callback("🔞 Ultimate – 150 €", "EU_ULTIMATE")],
       [Markup.button.callback("⬅️ Zurück", "BACK_TO_START")]
     ])
   );
 });
 
 /* =========================
-   EURO-ZAHLUNGSINFOS (kein Link)
+   EURO-STUFEN → ZAHLUNGSMETHODEN
 ========================= */
-bot.action("PAY_VIP_EU", (ctx) => {
-  ctx.answerCbQuery();
-  ctx.reply("⭐️ VIP – 25 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
-});
+const EURO_PAYMENTS = {
+  EU_VIP: 25,
+  EU_ULTRA: 50,
+  EU_ULTRAPRO: 100,
+  EU_ULTIMATE: 150
+};
 
-bot.action("PAY_ULTRA_EU", (ctx) => {
+bot.action(/EU_.+/, (ctx) => {
   ctx.answerCbQuery();
-  ctx.reply("⭐️ Ultra – 50 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
-});
-
-bot.action("PAY_ULTRAPRO_EU", (ctx) => {
-  ctx.answerCbQuery();
-  ctx.reply("⭐️ Ultra Pro – 100 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
-});
-
-bot.action("PAY_ULTIMATE_EU", (ctx) => {
-  ctx.answerCbQuery();
-  ctx.reply("🔞 Ultimate – 150 €\n💳 Bitte sende den Betrag direkt an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  const price = EURO_PAYMENTS[ctx.match[0]];
+  const name = ctx.match[0].replace("EU_", "");
+  
+  ctx.reply(
+    `💳 ${name} – ${price} €\nWähle die Zahlungsmethode:`,
+    Markup.inlineKeyboard([
+      [Markup.button.url("💳 PayPal", "https://www.paypal.me/BraveSupport")],
+      [Markup.button.callback("🎁 Amazon", `AMAZON_${ctx.match[0]}`)],
+      [Markup.button.callback("💰 Paysafecard", `PSC_${ctx.match[0]}`)],
+      [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
+    ])
+  );
 });
 
 /* =========================
-   ZURÜCK BUTTON
+   AMAZON / PSC → HINWEIS
+========================= */
+bot.action(/AMAZON_.+/, (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("🎁 Bitte sende den Betrag an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+bot.action(/PSC_.+/, (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("💰 Bitte sende den Betrag an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+});
+
+/* =========================
+   BACK BUTTON
 ========================= */
 bot.action("BACK_TO_START", (ctx) => {
   ctx.answerCbQuery();
@@ -106,10 +118,10 @@ bot.action("BACK_TO_START", (ctx) => {
   ctx.reply(
     `👋 Willkommen zurück bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "PAY_1500")],
-      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "PAY_2500")],
-      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "PAY_5000")],
-      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "PAY_7500")],
+      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_7500")],
       [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")]
     ])
   );
