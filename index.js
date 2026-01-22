@@ -12,7 +12,6 @@ bot.start((ctx) => {
   ctx.reply(
     `👋 Willkommen bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ Starter – 500 Stars", "STAR_500")],
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
       [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
       [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
@@ -26,7 +25,6 @@ bot.start((ctx) => {
    STAR PAYMENT
 ========================= */
 const STAR_PRICES = {
-  STAR_500: 500,
   STAR_1500: 1500,
   STAR_2500: 2500,
   STAR_5000: 5000,
@@ -65,7 +63,6 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
   ctx.reply(
     "💳 Wähle deinen Plan (Euro-Preise):",
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ Starter – 10 €", "EU_STARTER")],
       [Markup.button.callback("⭐️ VIP – 25 €", "EU_VIP")],
       [Markup.button.callback("⭐️ Ultra – 50 €", "EU_ULTRA")],
       [Markup.button.callback("⭐️ Ultra Pro – 100 €", "EU_ULTRAPRO")],
@@ -78,19 +75,6 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
 /* =========================
    EURO → ZAHLUNGSMETHODEN
 ========================= */
-bot.action("EU_STARTER", async (ctx) => {
-  await ctx.answerCbQuery();
-  ctx.reply(
-    "⭐️ Starter – 10 €\nWähle die Zahlungsmethode:",
-    Markup.inlineKeyboard([
-      [Markup.button.url("💳 PayPal", "https://www.paypal.me/BraveSupport/10")],
-      [Markup.button.callback("🎁 Amazon", "AMAZON_EU_STARTER")],
-      [Markup.button.callback("💰 Paysafecard", "PSC_EU_STARTER")],
-      [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
-    ])
-  );
-});
-
 bot.action("EU_VIP", async (ctx) => {
   await ctx.answerCbQuery();
   ctx.reply(
@@ -146,57 +130,47 @@ bot.action("EU_ULTIMATE", async (ctx) => {
 /* =========================
    AMAZON HINWEISE
 ========================= */
-bot.action("AMAZON_EU_STARTER", async (ctx) => {
-  await ctx.answerCbQuery();
-  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 10 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
-});
-
 bot.action("AMAZON_EU_VIP", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 25 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 25 € an @BraveSupport1");
 });
 
 bot.action("AMAZON_EU_ULTRA", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 50 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 50 € an @BraveSupport1");
 });
 
 bot.action("AMAZON_EU_ULTRAPRO", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 100 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 100 € an @BraveSupport1");
 });
 
 bot.action("AMAZON_EU_ULTIMATE", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 150 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("🎁 Bitte sende einen Amazon-Gutschein im Wert von 150 € an @BraveSupport1");
 });
 
 /* =========================
    PAYSAFECARD HINWEISE
 ========================= */
-bot.action("PSC_EU_STARTER", async (ctx) => {
-  await ctx.answerCbQuery();
-  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 10 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
-});
-
 bot.action("PSC_EU_VIP", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 25 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 25 € an @BraveSupport1");
 });
 
 bot.action("PSC_EU_ULTRA", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 50 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 50 € an @BraveSupport1");
 });
 
 bot.action("PSC_EU_ULTRAPRO", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 100 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 100 € an @BraveSupport1");
 });
 
 bot.action("PSC_EU_ULTIMATE", async (ctx) => {
   await ctx.answerCbQuery();
-  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 150 € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1");
+  ctx.reply("💰 Bitte sende eine Paysafecard im Wert von 150 € an @BraveSupport1");
 });
 
 /* =========================
@@ -208,7 +182,6 @@ bot.action("BACK_TO_START", async (ctx) => {
   ctx.reply(
     `👋 Willkommen zurück bei BRAVE, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ Starter – 500 Stars", "STAR_500")],
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
       [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
       [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
