@@ -1,9 +1,22 @@
 import { Telegraf, Markup } from "telegraf";
 
-if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN fehlt");
-if (!process.env.PAYMENT_TOKEN) throw new Error("PAYMENT_TOKEN fehlt");
+/* =========================
+   ENV CHECK
+========================= */
+if (!process.env.BOT_TOKEN) {
+  console.error("❌ BOT_TOKEN fehlt");
+  process.exit(1);
+}
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
+
+/* =========================
+   PAYMENT TOKEN (Stars)
+========================= */
+const PAYMENT_TOKEN = process.env.PAYMENT_TOKEN || null;
+if (!PAYMENT_TOKEN) {
+  console.warn("⚠️ PAYMENT_TOKEN fehlt – Stars-Zahlung wird deaktiviert");
+}
 
 /* =========================
    START
@@ -23,7 +36,7 @@ bot.start((ctx) => {
 });
 
 /* =========================
-   STAR PAYMENT (AKTIV)
+   STAR PAYMENT
 ========================= */
 const STAR_PRICES = {
   STAR_1500: 1500,
@@ -36,33 +49,30 @@ bot.action(/STAR_\d+/, async (ctx) => {
   const key = ctx.match[0];
   const stars = STAR_PRICES[key];
 
-  if (!stars) {
-    return ctx.answerCbQuery("❌ Ungültiger Plan");
-  }
+  if (!stars) return ctx.answerCbQuery("❌ Ungültiger Plan");
 
-  await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
+  await ctx.answerCbQuery();
+
+  if (!PAYMENT_TOKEN) {
+    return ctx.reply(
+      "⚠️ Stars-Zahlung ist aktuell deaktiviert.\nBitte nutze das Euro-Menü 💳"
+    );
+  }
 
   return ctx.replyWithInvoice({
     title: `BRAVE – ${stars} Stars`,
     description: `Zugang mit ${stars} Telegram Stars`,
     payload: `BRAVE_${stars}_${ctx.from.id}`,
-    provider_token: process.env.PAYMENT_TOKEN,
+    provider_token: PAYMENT_TOKEN,
     currency: "XTR",
-    prices: [
-      {
-        label: `${stars} Stars`,
-        amount: stars
-      }
-    ]
+    prices: [{ label: `${stars} Stars`, amount: stars }]
   });
 });
 
 /* =========================
-   CHECKOUT
+   PRE-CHECKOUT & SUCCESS
 ========================= */
-bot.on("pre_checkout_query", (ctx) =>
-  ctx.answerPreCheckoutQuery(true)
-);
+bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
@@ -88,7 +98,7 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
 });
 
 /* =========================
-   EURO ZAHLUNG (MANUELL)
+   EURO → ZAHLUNG
 ========================= */
 const euroOptions = (price, back) =>
   Markup.inlineKeyboard([
@@ -123,7 +133,7 @@ bot.action("EU_ULTIMATE", (ctx) =>
 });
 
 /* =========================
-   BACK
+   BACK BUTTON
 ========================= */
 bot.action("BACK_TO_START", async (ctx) => {
   await ctx.answerCbQuery();
@@ -141,7 +151,7 @@ bot.action("BACK_TO_START", async (ctx) => {
 });
 
 /* =========================
-   START
+   START BOT
 ========================= */
 bot.launch({ dropPendingUpdates: true });
 console.log("🤖 BOT GESTARTET");
