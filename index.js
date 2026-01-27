@@ -10,18 +10,23 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const ADMIN_CHAT_ID = "@BraveSupport1";
 
 /* =========================
-   START & HAUPTMENÜ BUTTON
+   HAUPTMENÜ BUTTON
 ========================= */
 const MAIN_MENU_BUTTON = Markup.button.callback("🏠 Hauptmenü", "MAIN_MENU");
+
+/* =========================
+   START & HAUPTMENÜ
+========================= */
+const MENU_BUTTONS = [
+  [Markup.button.callback("⭐️ VIP", "BACK_TO_START")],
+  [Markup.button.callback("👻 Snapchat Tool", "SNAPCHAT_TOOL")]
+];
 
 bot.start((ctx) => {
   const username = ctx.from.first_name || "User";
   ctx.reply(
     `👋 Willkommen bei BRAVE, ${username}!\n\nWähle eine Option:`,
-    Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP", "BACK_TO_START")],
-      [Markup.button.callback("👻 Snapchat Tool", "SNAPCHAT_TOOL")]
-    ])
+    Markup.inlineKeyboard(MENU_BUTTONS)
   );
 });
 
@@ -30,15 +35,12 @@ bot.action("MAIN_MENU", async (ctx) => {
   const username = ctx.from.first_name || "User";
   ctx.reply(
     `👋 Willkommen zurück im Hauptmenü, ${username}!\n\nWähle eine Option:`,
-    Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP", "BACK_TO_START")],
-      [Markup.button.callback("👻 Snapchat Tool", "SNAPCHAT_TOOL")]
-    ])
+    Markup.inlineKeyboard(MENU_BUTTONS)
   );
 });
 
 /* =========================
-   STAR PAYMENT
+   STAR PAYMENT (VIP)
 ========================= */
 const STAR_PRICES = {
   STAR_1500: 1500,
@@ -83,7 +85,7 @@ bot.on("successful_payment", async (ctx) => {
 });
 
 /* =========================
-   EURO STUFEN
+   EURO STUFEN (VIP)
 ========================= */
 bot.action("OTHER_PAYMENTS", async (ctx) => {
   await ctx.answerCbQuery();
@@ -99,9 +101,6 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
   );
 });
 
-/* =========================
-   EURO → ZAHLUNGSMETHODEN
-========================= */
 const paypalButton = Markup.button.url(
   "💳 PayPal",
   "https://www.paypal.me/BraveSupport2"
@@ -111,7 +110,7 @@ const paypalButton = Markup.button.url(
   bot.action(plan, async (ctx) => {
     await ctx.answerCbQuery();
     ctx.reply(
-      `${plan.replace("EU_","")} – Euro-Zahlung\nWähle die Zahlungsmethode:`,
+      `${plan.replace("EU_","")} – Euro-Zahlung\n📩 Schicke den Code an @BraveSupport1 für den Kauf.`,
       Markup.inlineKeyboard([
         [paypalButton],
         [Markup.button.callback("🎁 Amazon", `AMAZON_${plan}`)],
@@ -178,15 +177,13 @@ Object.entries(PSC_MESSAGES).forEach(([key, value]) => {
 bot.action("SNAPCHAT_TOOL", async (ctx) => {
   await ctx.answerCbQuery();
 
-  // Erklärung
+  // Proof & Status
   await ctx.reply(
-    "🔥 *Brave SnapTool V3* 🔥\n\n" +
-    "Exklusive Snapchat‑bezogene Tools & Services.\n\n" +
-    "Status: Working ✅",
+    "🔥 *Snapchat Tool* 🔥\nStatus: Working ✅",
     { parse_mode: "Markdown" }
   );
 
-  // Buttons: Proof-Video + Preise + Hauptmenü
+  // Buttons: Proof + Preise + Hauptmenü
   await ctx.reply(
     "Mehr Infos:",
     Markup.inlineKeyboard([
@@ -198,7 +195,7 @@ bot.action("SNAPCHAT_TOOL", async (ctx) => {
     ])
   );
 
-  // Sternen-Zahlungen (1500, 2500, 5000)
+  // Sternen-Zahlungen (Snap Tool)
   const SNAP_STAR_PRICES = {
     STAR_1500: 1500,
     STAR_2500: 2500,
@@ -208,7 +205,7 @@ bot.action("SNAPCHAT_TOOL", async (ctx) => {
     bot.action(key, async (ctx) => {
       await ctx.answerCbQuery();
       ctx.reply(
-        `💳 Du hast Snapchat Tool für ${stars} Stars gewählt.\n📩 Kontaktiere @BraveSupport1 für den Kauf.`
+        `💳 Du hast Snapchat Tool für ${stars} Stars gewählt.\n📩 Schicke den Code an @BraveSupport1.`
       );
       await ctx.telegram.sendMessage(
         ADMIN_CHAT_ID,
@@ -217,26 +214,26 @@ bot.action("SNAPCHAT_TOOL", async (ctx) => {
       );
     });
   });
-});
 
-// Tool Preise 25 / 50 / 120
-const SNAP_PRICES = {
-  SNAP_25: 25,
-  SNAP_50: 50,
-  SNAP_120: 120
-};
-
-Object.entries(SNAP_PRICES).forEach(([key, amount]) => {
-  bot.action(key, async (ctx) => {
-    await ctx.answerCbQuery();
-    ctx.reply(
-      `💳 Du hast Snapchat Tool für ${amount} € gewählt.\n📩 Kontaktiere @BraveSupport1 für den Kauf.`
-    );
-    await ctx.telegram.sendMessage(
-      ADMIN_CHAT_ID,
-      `👻 *Snapchat Tool gewählt*\n\n👤 ${ctx.from.first_name} (@${ctx.from.username || "kein_username"})\n🆔 ID: ${ctx.from.id}\n💶 Betrag: ${amount} €`,
-      { parse_mode: "Markdown" }
-    );
+  // Normale Zahlungen (Snap Tool)
+  const SNAP_PRICES = {
+    SNAP_25: 25,
+    SNAP_50: 50,
+    SNAP_120: 120
+  };
+  Object.entries(SNAP_PRICES).forEach(([key, amount]) => {
+    bot.action(key, async (ctx) => {
+      await ctx.answerCbQuery();
+      ctx.reply(
+        `💳 Du hast Snapchat Tool für ${amount} € gewählt.\n📩 Schicke den Code an @BraveSupport1.`,
+        Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
+      );
+      await ctx.telegram.sendMessage(
+        ADMIN_CHAT_ID,
+        `👻 *Snapchat Tool gewählt*\n\n👤 ${ctx.from.first_name} (@${ctx.from.username || "kein_username"})\n🆔 ID: ${ctx.from.id}\n💶 Betrag: ${amount} €`,
+        { parse_mode: "Markdown" }
+      );
+    });
   });
 });
 
@@ -253,7 +250,8 @@ bot.action("BACK_TO_START", async (ctx) => {
       [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
       [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
       [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_7500")],
-      [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")]
+      [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten", "OTHER_PAYMENTS")],
+      [Markup.button.callback("👻 Snapchat Tool", "SNAPCHAT_TOOL")]
     ])
   );
 });
