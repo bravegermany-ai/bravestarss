@@ -7,7 +7,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 /* =========================
    ADMIN CHAT
 ========================= */
-const ADMIN_CHAT_ID = "@BraveSupport1"; // Admin Telegram Username
+const ADMIN_CHAT_ID = "@BraveSupport1";
 
 /* =========================
    START
@@ -59,16 +59,14 @@ bot.on("successful_payment", async (ctx) => {
   const user = ctx.from;
   const stars = payment.total_amount;
 
-  // Nachricht an Käufer – direkt den Link senden
   await ctx.reply(
     `✅ Zahlung erfolgreich!\n\nHier ist dein Zugang: [Klicke hier](https://t.me/+_Lwkx_EKnd9lMjJh)`,
     { parse_mode: "Markdown" }
   );
 
-  // Nachricht an Admin (@BraveSupport1)
   await ctx.telegram.sendMessage(
     ADMIN_CHAT_ID,
-    `⭐️ *Neue Sterne-Zahlung!*\n\n👤 User: ${user.first_name} (@${user.username || "kein_username"})\n🆔 User ID: ${user.id}\n💫 Stars: ${stars}`,
+    `⭐️ *Neue Stars-Zahlung!*\n\n👤 ${user.first_name} (@${user.username || "kein_username"})\n🆔 ID: ${user.id}\n💫 Stars: ${stars}`,
     { parse_mode: "Markdown" }
   );
 });
@@ -93,12 +91,17 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
 /* =========================
    EURO → ZAHLUNGSMETHODEN
 ========================= */
+const paypalButton = Markup.button.url(
+  "💳 PayPal",
+  "https://www.paypal.me/BraveSupport2"
+);
+
 bot.action("EU_VIP", async (ctx) => {
   await ctx.answerCbQuery();
   ctx.reply(
     "⭐️ VIP – 25 €\nWähle die Zahlungsmethode:",
     Markup.inlineKeyboard([
-      [Markup.button.url("💳 PayPal", "https://t.me/BraveSupport2")],
+      [paypalButton],
       [Markup.button.callback("🎁 Amazon", "AMAZON_EU_VIP")],
       [Markup.button.callback("💰 Paysafecard", "PSC_EU_VIP")],
       [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
@@ -111,7 +114,7 @@ bot.action("EU_ULTRA", async (ctx) => {
   ctx.reply(
     "⭐️ Ultra – 50 €\nWähle die Zahlungsmethode:",
     Markup.inlineKeyboard([
-      [Markup.button.url("💳 PayPal", "https://t.me/BraveSupport2")],
+      [paypalButton],
       [Markup.button.callback("🎁 Amazon", "AMAZON_EU_ULTRA")],
       [Markup.button.callback("💰 Paysafecard", "PSC_EU_ULTRA")],
       [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
@@ -124,7 +127,7 @@ bot.action("EU_ULTRAPRO", async (ctx) => {
   ctx.reply(
     "⭐️ Ultra Pro – 100 €\nWähle die Zahlungsmethode:",
     Markup.inlineKeyboard([
-      [Markup.button.url("💳 PayPal", "https://t.me/BraveSupport2")],
+      [paypalButton],
       [Markup.button.callback("🎁 Amazon", "AMAZON_EU_ULTRAPRO")],
       [Markup.button.callback("💰 Paysafecard", "PSC_EU_ULTRAPRO")],
       [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
@@ -137,7 +140,7 @@ bot.action("EU_ULTIMATE", async (ctx) => {
   ctx.reply(
     "🔞 Ultimate – 150 €\nWähle die Zahlungsmethode:",
     Markup.inlineKeyboard([
-      [Markup.button.url("💳 PayPal", "https://t.me/BraveSupport2")],
+      [paypalButton],
       [Markup.button.callback("🎁 Amazon", "AMAZON_EU_ULTIMATE")],
       [Markup.button.callback("💰 Paysafecard", "PSC_EU_ULTIMATE")],
       [Markup.button.callback("⬅️ Zurück", "OTHER_PAYMENTS")]
@@ -146,7 +149,7 @@ bot.action("EU_ULTIMATE", async (ctx) => {
 });
 
 /* =========================
-   AMAZON HINWEISE
+   AMAZON + ADMIN INFO
 ========================= */
 const AMAZON_MESSAGES = {
   EU_VIP: 25,
@@ -158,6 +161,13 @@ const AMAZON_MESSAGES = {
 Object.entries(AMAZON_MESSAGES).forEach(([key, value]) => {
   bot.action(`AMAZON_${key}`, async (ctx) => {
     await ctx.answerCbQuery();
+
+    await ctx.telegram.sendMessage(
+      ADMIN_CHAT_ID,
+      `🎁 *Amazon Zahlung ausgewählt*\n\n👤 ${ctx.from.first_name} (@${ctx.from.username || "kein_username"})\n🆔 ID: ${ctx.from.id}\n💶 Betrag: ${value} €`,
+      { parse_mode: "Markdown" }
+    );
+
     ctx.reply(
       `🎁 Bitte sende einen Amazon-Gutschein im Wert von ${value} € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1`
     );
@@ -165,7 +175,7 @@ Object.entries(AMAZON_MESSAGES).forEach(([key, value]) => {
 });
 
 /* =========================
-   PAYSAFECARD HINWEISE
+   PAYSAFECARD + ADMIN INFO
 ========================= */
 const PSC_MESSAGES = {
   EU_VIP: 25,
@@ -177,6 +187,13 @@ const PSC_MESSAGES = {
 Object.entries(PSC_MESSAGES).forEach(([key, value]) => {
   bot.action(`PSC_${key}`, async (ctx) => {
     await ctx.answerCbQuery();
+
+    await ctx.telegram.sendMessage(
+      ADMIN_CHAT_ID,
+      `💰 *Paysafecard Zahlung ausgewählt*\n\n👤 ${ctx.from.first_name} (@${ctx.from.username || "kein_username"})\n🆔 ID: ${ctx.from.id}\n💶 Betrag: ${value} €`,
+      { parse_mode: "Markdown" }
+    );
+
     ctx.reply(
       `💰 Bitte sende eine Paysafecard im Wert von ${value} € an @BraveSupport1\n📩 Bei Problemen kontaktiere @BraveSupport1`
     );
@@ -184,7 +201,7 @@ Object.entries(PSC_MESSAGES).forEach(([key, value]) => {
 });
 
 /* =========================
-   BACK BUTTON
+   BACK
 ========================= */
 bot.action("BACK_TO_START", async (ctx) => {
   await ctx.answerCbQuery();
