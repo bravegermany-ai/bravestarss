@@ -10,27 +10,26 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const MAIN_MENU_BUTTON = Markup.button.callback("🏠 Hauptmenü", "MAIN_MENU");
 
 /* =========================
-   START
+   START / MAIN MENU
 ========================= */
-bot.start((ctx) => {
+const showMainMenu = (ctx, textPrefix = "👋 Willkommen") => {
   const username = ctx.from.first_name || "User";
-  ctx.reply(
-    `👋 Willkommen bei BRAVE, ${username}!\n\nWähle eine Option:`,
+  return ctx.reply(
+    `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP", "BACK_TO_START")]
+      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_7500")],
+      [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten (Euro)", "OTHER_PAYMENTS")]
     ])
   );
-});
+};
 
+bot.start((ctx) => showMainMenu(ctx));
 bot.action("MAIN_MENU", async (ctx) => {
   await ctx.answerCbQuery();
-  const username = ctx.from.first_name || "User";
-  ctx.reply(
-    `👋 Hauptmenü, ${username}!\n\nWähle eine Option:`,
-    Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP", "BACK_TO_START")]
-    ])
-  );
+  showMainMenu(ctx, "🏠 Hauptmenü");
 });
 
 /* =========================
@@ -63,7 +62,7 @@ bot.on("pre_checkout_query", (ctx) =>
 
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
-    `✅ Zahlung erfolgreich!\n\n🎉 Hier ist dein Zugang:\nhttps://t.me/+_Lwkx_EKnd9lMjJh`
+    `✅ Zahlung erfolgreich!\n\n🎉 Dein Zugang:\nhttps://t.me/+_Lwkx_EKnd9lMjJh`
   );
 });
 
@@ -73,7 +72,7 @@ bot.on("successful_payment", async (ctx) => {
 bot.action("OTHER_PAYMENTS", async (ctx) => {
   await ctx.answerCbQuery();
   ctx.reply(
-    "💳 Wähle deinen Euro-Plan:",
+    "💳 Euro-Zahlung – wähle deinen Plan:",
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐️ VIP – 25 €", "EU_VIP")],
       [Markup.button.callback("⭐️ Ultra – 50 €", "EU_ULTRA")],
@@ -151,24 +150,6 @@ Object.entries(PSC).forEach(([plan, price]) => {
       }
     );
   });
-});
-
-/* =========================
-   BACK TO START
-========================= */
-bot.action("BACK_TO_START", async (ctx) => {
-  await ctx.answerCbQuery();
-  const username = ctx.from.first_name || "User";
-  ctx.reply(
-    `👋 Willkommen zurück, ${username}!\n\nWähle deinen Plan:`,
-    Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
-      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
-      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
-      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_7500")],
-      [Markup.button.callback("💳 Euro Zahlung", "OTHER_PAYMENTS")]
-    ])
-  );
 });
 
 /* =========================
