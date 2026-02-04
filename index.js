@@ -48,12 +48,11 @@ bot.action(/STAR_\d+/, async (ctx) => {
   if (!key || !STAR_PRICES[key]) return await ctx.reply("❌ Ungültiger Plan!");
   const stars = STAR_PRICES[key];
 
-  // Payment token leer, nur Demo
   await ctx.replyWithInvoice({
     title: `BLAMAGE – ${stars} Stars`,
     description: `Zugang mit ${stars} Telegram-Sternen`,
     payload: `BLAMAGE_${stars}_${ctx.from.id}`,
-    provider_token: "", // BOTFATHER TOKEN hier einfügen
+    provider_token: "", // BOTFATHER TOKEN
     currency: "XTR",
     prices: [{ label: `${stars} Stars`, amount: stars }]
   });
@@ -115,7 +114,7 @@ Object.entries(AMAZON).forEach(([plan, price]) => {
   bot.action(`AMAZON_${plan}`, async (ctx) => {
     await ctx.answerCbQuery();
     await ctx.reply(
-      `🎁 *Amazon Zahlung*\n\nSende bitte einen Amazon-Gutschein im Wert von *${price} €* an @BlamageGermany`,
+      `🎁 *Amazon Zahlung*\n\nSende bitte einen Amazon-Gutschein im Wert von *${price} €* an @SkandalGermany6`,
       {
         parse_mode: "Markdown",
         reply_markup: Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
@@ -138,7 +137,7 @@ Object.entries(PSC).forEach(([plan, price]) => {
   bot.action(`PSC_${plan}`, async (ctx) => {
     await ctx.answerCbQuery();
     await ctx.reply(
-      `💰 *Paysafecard Zahlung*\n\nSende bitte eine Paysafecard im Wert von *${price} €* an @BlamageGermany`,
+      `💰 *Paysafecard Zahlung*\n\nSende bitte eine Paysafecard im Wert von *${price} €* an @SkandalGermany6`,
       {
         parse_mode: "Markdown",
         reply_markup: Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
