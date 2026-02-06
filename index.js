@@ -60,9 +60,12 @@ bot.action(/STAR_\d+/, async (ctx) => {
 
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
+/* =========================
+   SUCCESSFUL PAYMENT (FEHLER)  
+========================= */
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
-    `✅ Zahlung erfolgreich!\n\n🎉 Dein Zugang:\nhttps://t.me/+_Lwkx_EKnd9lMjJh`
+    "⚠️ Beim Bot ist ein Fehler aufgetreten. Bitte melde dich bei @SkandalGermany6."
   );
 });
 
