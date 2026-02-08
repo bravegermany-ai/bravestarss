@@ -101,10 +101,7 @@ bot.action("PSC_25", async (ctx) => {
 bot.action("FREE_ACCESS", async (ctx) => {
   await ctx.answerCbQuery();
 
-  const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
-    "INFLUENCER L E A K S 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
-  );
-
+  // Erklärungstext
   await ctx.reply(
     "🎁 *Gratis Zugriff*\n\n" +
     "So bekommst du kostenlosen Zugang:\n\n" +
@@ -112,8 +109,17 @@ bot.action("FREE_ACCESS", async (ctx) => {
     "2️⃣ Mache Screenshots / Weiterleitungs-Beweise\n" +
     "3️⃣ Sende die Beweise an 👉 @SkandalGermany6\n\n" +
     "⏳ Nach Prüfung wirst du manuell freigeschaltet.",
+    { parse_mode: "Markdown" }
+  );
+
+  // Button in eigener Nachricht, sichtbar unter dem Text
+  const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
+    "INFLUENCER L E A K S 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
+  );
+
+  await ctx.reply(
+    "📤 Klicke den Button unten, um die Gruppe zu teilen:",
     {
-      parse_mode: "Markdown",
       reply_markup: Markup.inlineKeyboard([
         [Markup.button.url("📤 Gruppe teilen", shareUrl)],
         [MAIN_MENU_BUTTON]
