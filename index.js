@@ -101,13 +101,14 @@ bot.action("PSC_25", async (ctx) => {
 bot.action("FREE_ACCESS", async (ctx) => {
   await ctx.answerCbQuery();
 
+  // Einfacher Text + Button, der überall sichtbar ist
   const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
-    "INFLUENCER LEAKS 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
+    "INFLUENCER LEAKS: https://t.me/+Ngf7Kd3U5QQ5Mjkx"
   );
 
   await ctx.reply(
-    "*Gratis Zugriff*\n\n" +
-    "Um kostenlosen Zugang zu bekommen:\n" +
+    "*🎁 Gratis Zugriff*\n\n" +
+    "Um kostenlosen Zugang zu erhalten:\n" +
     "1️⃣ Teile die Gruppe mit mindestens 5 Freunden\n" +
     "2️⃣ Mache Screenshots als Beweis\n" +
     "3️⃣ Sende die Beweise an @SkandalGermany6",
