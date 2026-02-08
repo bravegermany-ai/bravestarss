@@ -14,13 +14,14 @@ const MAIN_MENU_BUTTON = Markup.button.callback("🏠 Hauptmenü", "MAIN_MENU");
 ========================= */
 const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
   const username = ctx.from.first_name || "User";
-
   await ctx.reply(
     `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
-      [Markup.button.callback("💳 Euro – 25 €", "EU_25")],
-      [Markup.button.callback("🎁 Gratis Zugriff", "FREE_ACCESS")]
+      [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
+      [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
+      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_7500")],
+      [Markup.button.callback("💳 Weitere Zahlungsmöglichkeiten (Euro)", "OTHER_PAYMENTS")]
     ])
   );
 };
@@ -32,25 +33,35 @@ bot.action("MAIN_MENU", async (ctx) => {
 });
 
 /* =========================
-   STAR PAYMENT (1500)
+   STAR PAYMENTS
 ========================= */
-bot.action("STAR_1500", async (ctx) => {
+const STAR_PRICES = {
+  STAR_1500: 1500,
+  STAR_2500: 2500,
+  STAR_5000: 5000,
+  STAR_7500: 7500,
+};
+
+bot.action(/STAR_\d+/, async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
+  const key = ctx.match?.[0];
+  if (!key || !STAR_PRICES[key]) return await ctx.reply("❌ Ungültiger Plan!");
+  const stars = STAR_PRICES[key];
 
   await ctx.replyWithInvoice({
-    title: "BLAMAGE – 1.500 Stars",
-    description: "Zugang mit 1.500 Telegram-Sternen",
-    payload: `BLAMAGE_1500_${ctx.from.id}`,
-    provider_token: "", // BOTFATHER TOKEN hier einfügen
+    title: `BLAMAGE – ${stars} Stars`,
+    description: `Zugang mit ${stars} Telegram-Sternen`,
+    payload: `BLAMAGE_${stars}_${ctx.from.id}`,
+    provider_token: "", // BOTFATHER TOKEN
     currency: "XTR",
-    prices: [{ label: "1.500 Stars", amount: 1500 }]
+    prices: [{ label: `${stars} Stars`, amount: stars }]
   });
 });
 
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
 /* =========================
-   SUCCESSFUL PAYMENT
+   SUCCESSFUL PAYMENT (FEHLER)  
 ========================= */
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
@@ -59,63 +70,83 @@ bot.on("successful_payment", async (ctx) => {
 });
 
 /* =========================
-   EURO 25 €
+   EURO PLÄNE
 ========================= */
-bot.action("EU_25", async (ctx) => {
+bot.action("OTHER_PAYMENTS", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.reply(
-    "💳 Euro-Zahlung – 25 €\n\nWähle Methode:",
+    "💳 Euro-Zahlung – wähle deinen Plan:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("🎁 Amazon", "AMAZON_25")],
-      [Markup.button.callback("💰 Paysafecard", "PSC_25")],
+      [Markup.button.callback("⭐️ VIP – 25 €", "EU_VIP")],
+      [Markup.button.callback("⭐️ Ultra – 50 €", "EU_ULTRA")],
+      [Markup.button.callback("⭐️ Ultra Pro – 100 €", "EU_ULTRAPRO")],
+      [Markup.button.callback("🔞 Ultimate – 150 €", "EU_ULTIMATE")],
       [MAIN_MENU_BUTTON]
     ])
   );
 });
 
-bot.action("AMAZON_25", async (ctx) => {
-  await ctx.answerCbQuery();
-  await ctx.reply(
-    "🎁 *Amazon Zahlung*\n\nSende bitte einen Amazon-Gutschein im Wert von *25 €* an @SkandalGermany6",
-    {
-      parse_mode: "Markdown",
-      reply_markup: Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
-    }
-  );
-});
-
-bot.action("PSC_25", async (ctx) => {
-  await ctx.answerCbQuery();
-  await ctx.reply(
-    "💰 *Paysafecard Zahlung*\n\nSende bitte eine Paysafecard im Wert von *25 €* an @SkandalGermany6",
-    {
-      parse_mode: "Markdown",
-      reply_markup: Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
-    }
-  );
+/* =========================
+   EURO → METHODEN
+========================= */
+["EU_VIP","EU_ULTRA","EU_ULTRAPRO","EU_ULTIMATE"].forEach(plan => {
+  bot.action(plan, async (ctx) => {
+    await ctx.answerCbQuery();
+    await ctx.reply(
+      `${plan.replace("EU_","")} – Zahlung\n\nWähle Methode:`,
+      Markup.inlineKeyboard([
+        [Markup.button.callback("🎁 Amazon", `AMAZON_${plan}`)],
+        [Markup.button.callback("💰 Paysafecard", `PSC_${plan}`)],
+        [MAIN_MENU_BUTTON]
+      ])
+    );
+  });
 });
 
 /* =========================
-   GRATIS ZUGRIFF
+   AMAZON
 ========================= */
-bot.action("FREE_ACCESS", async (ctx) => {
-  await ctx.answerCbQuery(); // Callback sofort bestätigen
+const AMAZON = {
+  EU_VIP: 25,
+  EU_ULTRA: 50,
+  EU_ULTRAPRO: 100,
+  EU_ULTIMATE: 150,
+};
 
-  const shareUrl = "https://t.me/share/url?url=https://t.me/+Ngf7Kd3U5QQ5Mjkx";
+Object.entries(AMAZON).forEach(([plan, price]) => {
+  bot.action(`AMAZON_${plan}`, async (ctx) => {
+    await ctx.answerCbQuery();
+    await ctx.reply(
+      `🎁 *Amazon Zahlung*\n\nSende bitte einen Amazon-Gutschein im Wert von *${price} €* an @SkandalGermany6`,
+      {
+        parse_mode: "Markdown",
+        reply_markup: Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
+      }
+    );
+  });
+});
 
-  await ctx.reply(
-    "🎁 *Gratis Zugriff*\n\n" +
-    "1️⃣ Teile die Gruppe mit mindestens 5 Freunden\n" +
-    "2️⃣ Mache Screenshots als Beweis\n" +
-    "3️⃣ Sende die Beweise an @SkandalGermany6",
-    {
-      parse_mode: "Markdown",
-      reply_markup: Markup.inlineKeyboard([
-        [Markup.button.url("📤 Zugriff bekommen", shareUrl)],
-        [MAIN_MENU_BUTTON]
-      ])
-    }
-  );
+/* =========================
+   PAYSAFECARD
+========================= */
+const PSC = {
+  EU_VIP: 25,
+  EU_ULTRA: 50,
+  EU_ULTRAPRO: 100,
+  EU_ULTIMATE: 150,
+};
+
+Object.entries(PSC).forEach(([plan, price]) => {
+  bot.action(`PSC_${plan}`, async (ctx) => {
+    await ctx.answerCbQuery();
+    await ctx.reply(
+      `💰 *Paysafecard Zahlung*\n\nSende bitte eine Paysafecard im Wert von *${price} €* an @SkandalGermany6`,
+      {
+        parse_mode: "Markdown",
+        reply_markup: Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
+      }
+    );
+  });
 });
 
 /* =========================
