@@ -18,7 +18,8 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
     `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
-      [Markup.button.callback("💳 Euro – 25 €", "EU_25")]
+      [Markup.button.callback("💳 Euro – 25 €", "EU_25")],
+      [Markup.button.callback("🎁 Gratis freischalten", "FREE_UNLOCK")]
     ])
   );
 };
@@ -71,9 +72,6 @@ bot.action("EU_25", async (ctx) => {
   );
 });
 
-/* =========================
-   AMAZON 25 €
-========================= */
 bot.action("AMAZON_25", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.reply(
@@ -85,9 +83,6 @@ bot.action("AMAZON_25", async (ctx) => {
   );
 });
 
-/* =========================
-   PAYSAFECARD 25 €
-========================= */
 bot.action("PSC_25", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.reply(
@@ -95,6 +90,39 @@ bot.action("PSC_25", async (ctx) => {
     {
       parse_mode: "Markdown",
       reply_markup: Markup.inlineKeyboard([[MAIN_MENU_BUTTON]])
+    }
+  );
+});
+
+/* =========================
+   GRATIS FREISCHALTEN
+========================= */
+bot.action("FREE_UNLOCK", async (ctx) => {
+  await ctx.answerCbQuery();
+
+  const shareText = encodeURIComponent(
+    "INFLUENCER L E A K S 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
+  );
+
+  await ctx.reply(
+    "🎁 *Gratis Freischalten*\n\n" +
+    "So bekommst du kostenlosen Zugang:\n\n" +
+    "1️⃣ Teile die Gruppe mit *mindestens 5 Freunden*\n" +
+    "2️⃣ Nutze dafür den *Teilen-Button unten*\n" +
+    "3️⃣ Mache *Screenshots als Beweis*\n" +
+    "4️⃣ Sende die Beweise an 👉 @SkandalGermany6\n\n" +
+    "⏳ Nach Prüfung wirst du manuell freigeschaltet.",
+    {
+      parse_mode: "Markdown",
+      reply_markup: Markup.inlineKeyboard([
+        [
+          Markup.button.url(
+            "📤 Gruppe teilen",
+            `https://t.me/share/url?url=${shareText}`
+          )
+        ],
+        [MAIN_MENU_BUTTON]
+      ])
     }
   );
 });
