@@ -96,22 +96,21 @@ bot.action("PSC_25", async (ctx) => {
 });
 
 /* =========================
-   GRATIS ZUGRIFF MIT BUTTON UNTER DEM TEXT
+   GRATIS ZUGRIFF MIT FUNKTIONIERENDEM BUTTON
 ========================= */
 bot.action("FREE_ACCESS", async (ctx) => {
   await ctx.answerCbQuery();
 
   const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
-    "INFLUENCER L E A K S 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
+    "INFLUENCER LEAKS: https://t.me/+Ngf7Kd3U5QQ5Mjkx"
   );
 
+  // Text + Button in EINER Nachricht, Telegram zeigt Button jetzt sicher
   await ctx.reply(
-    "🎁 *Gratis Zugriff*\n\n" +
-    "So bekommst du kostenlosen Zugang:\n\n" +
-    "1️⃣ Teile die Gruppe mit *mindestens 5 Freunden*\n" +
-    "2️⃣ Mache Screenshots / Weiterleitungs-Beweise\n" +
-    "3️⃣ Sende die Beweise an 👉 @SkandalGermany6\n\n" +
-    "⏳ Nach Prüfung wirst du manuell freigeschaltet.",
+    "*Gratis Zugriff*\n\n" +
+    "1️⃣ Teile die Gruppe mit mindestens 5 Freunden\n" +
+    "2️⃣ Mache Screenshots als Beweis\n" +
+    "3️⃣ Sende die Beweise an @SkandalGermany6",
     {
       parse_mode: "Markdown",
       reply_markup: Markup.inlineKeyboard([
