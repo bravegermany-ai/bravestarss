@@ -96,12 +96,12 @@ bot.action("PSC_25", async (ctx) => {
 });
 
 /* =========================
-   GRATIS ZUGRIFF
+   GRATIS ZUGRIFF MIT BUTTON UNTEN
 ========================= */
 bot.action("FREE_ACCESS", async (ctx) => {
   await ctx.answerCbQuery();
 
-  const shareText = encodeURIComponent(
+  const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
     "INFLUENCER L E A K S 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
   );
 
@@ -115,7 +115,7 @@ bot.action("FREE_ACCESS", async (ctx) => {
     {
       parse_mode: "Markdown",
       reply_markup: Markup.inlineKeyboard([
-        [Markup.button.url("📤 Gruppe teilen", `https://t.me/share/url?url=${shareText}`)],
+        [Markup.button.url("📤 Gruppe teilen", shareUrl)],
         [MAIN_MENU_BUTTON]
       ])
     }
