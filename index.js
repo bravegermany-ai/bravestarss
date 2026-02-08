@@ -41,7 +41,7 @@ bot.action("STAR_1500", async (ctx) => {
     title: "BLAMAGE – 1.500 Stars",
     description: "Zugang mit 1.500 Telegram-Sternen",
     payload: `BLAMAGE_1500_${ctx.from.id}`,
-    provider_token: "", // BOTFATHER TOKEN
+    provider_token: "", // BOTFATHER TOKEN hier einfügen
     currency: "XTR",
     prices: [{ label: "1.500 Stars", amount: 1500 }]
   });
@@ -99,16 +99,12 @@ bot.action("PSC_25", async (ctx) => {
    GRATIS ZUGRIFF
 ========================= */
 bot.action("FREE_ACCESS", async (ctx) => {
-  await ctx.answerCbQuery();
+  await ctx.answerCbQuery(); // Callback sofort bestätigen
 
-  // Einfacher Text + Button, der überall sichtbar ist
-  const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
-    "INFLUENCER LEAKS: https://t.me/+Ngf7Kd3U5QQ5Mjkx"
-  );
+  const shareUrl = "https://t.me/share/url?url=https://t.me/+Ngf7Kd3U5QQ5Mjkx";
 
   await ctx.reply(
-    "*🎁 Gratis Zugriff*\n\n" +
-    "Um kostenlosen Zugang zu erhalten:\n" +
+    "🎁 *Gratis Zugriff*\n\n" +
     "1️⃣ Teile die Gruppe mit mindestens 5 Freunden\n" +
     "2️⃣ Mache Screenshots als Beweis\n" +
     "3️⃣ Sende die Beweise an @SkandalGermany6",
