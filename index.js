@@ -50,7 +50,7 @@ bot.action("STAR_1500", async (ctx) => {
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
 /* =========================
-   SUCCESSFUL PAYMENT (WIE DAVOR)
+   SUCCESSFUL PAYMENT
 ========================= */
 bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
@@ -96,12 +96,15 @@ bot.action("PSC_25", async (ctx) => {
 });
 
 /* =========================
-   GRATIS ZUGRIFF MIT BUTTON UNTEN
+   GRATIS ZUGRIFF MIT BUTTON UNTER DEM TEXT
 ========================= */
 bot.action("FREE_ACCESS", async (ctx) => {
   await ctx.answerCbQuery();
 
-  // Erklärungstext
+  const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
+    "INFLUENCER L E A K S 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
+  );
+
   await ctx.reply(
     "🎁 *Gratis Zugriff*\n\n" +
     "So bekommst du kostenlosen Zugang:\n\n" +
@@ -109,17 +112,8 @@ bot.action("FREE_ACCESS", async (ctx) => {
     "2️⃣ Mache Screenshots / Weiterleitungs-Beweise\n" +
     "3️⃣ Sende die Beweise an 👉 @SkandalGermany6\n\n" +
     "⏳ Nach Prüfung wirst du manuell freigeschaltet.",
-    { parse_mode: "Markdown" }
-  );
-
-  // Button in eigener Nachricht, sichtbar unter dem Text
-  const shareUrl = "https://t.me/share/url?url=" + encodeURIComponent(
-    "INFLUENCER L E A K S 🔞🇩🇪😱\nhttps://t.me/+Ngf7Kd3U5QQ5Mjkx"
-  );
-
-  await ctx.reply(
-    "📤 Klicke den Button unten, um die Gruppe zu teilen:",
     {
+      parse_mode: "Markdown",
       reply_markup: Markup.inlineKeyboard([
         [Markup.button.url("📤 Gruppe teilen", shareUrl)],
         [MAIN_MENU_BUTTON]
