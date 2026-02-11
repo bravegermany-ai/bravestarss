@@ -13,7 +13,7 @@ const MAIN_MENU_BUTTON = Markup.button.callback("🏠 Hauptmenü", "MAIN_MENU");
    STAR PLÄNE
 ========================= */
 const STAR_PLANS = {
-  STAR_500: { price: 500, title: "Geheime Gruppe VIP Ein" },
+  STAR_1000: { price: 1000, title: "Geheime Gruppe VIP" }, // Neuer Plan
   STAR_1500: { price: 1500, title: "VIP" },
   STAR_2500: { price: 2500, title: "Ultra" },
   STAR_5000: { price: 5000, title: "Ultra Pro" },
@@ -29,7 +29,7 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
   await ctx.reply(
     `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ Geheime Gruppe VIP Ein – 500 Stars", "STAR_500")],
+      [Markup.button.callback("⭐️ Geheime Gruppe VIP – 1000 Stars", "STAR_1000")],
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
       [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
       [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
@@ -106,7 +106,7 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
   await ctx.reply(
     "💳 Euro-Zahlung – wähle deinen Plan:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ Geheime Gruppe VIP – 10 €", "EU_VIP10")],
+      [Markup.button.callback("⭐️ Geheime Gruppe VIP – 20 €", "EU_VIP20")], // Neuer Plan
       [Markup.button.callback("⭐️ VIP – 25 €", "EU_VIP")],
       [Markup.button.callback("⭐️ Ultra – 50 €", "EU_ULTRA")],
       [Markup.button.callback("⭐️ Ultra Pro – 100 €", "EU_ULTRAPRO")],
@@ -119,7 +119,7 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
 /* =========================
    EURO → METHODEN
 ========================= */
-["EU_VIP10","EU_VIP","EU_ULTRA","EU_ULTRAPRO","EU_ULTIMATE"].forEach(plan => {
+["EU_VIP20","EU_VIP","EU_ULTRA","EU_ULTRAPRO","EU_ULTIMATE"].forEach(plan => {
   bot.action(plan, async (ctx) => {
     await ctx.answerCbQuery();
     await ctx.reply(
@@ -138,7 +138,7 @@ bot.action("OTHER_PAYMENTS", async (ctx) => {
    AMAZON, PSC, PAYPAL
 ========================= */
 const EURO_PRICES = {
-  EU_VIP10: 10,
+  EU_VIP20: 20,
   EU_VIP: 25,
   EU_ULTRA: 50,
   EU_ULTRAPRO: 100,
