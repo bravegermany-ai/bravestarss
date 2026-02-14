@@ -8,7 +8,6 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
    STAR PLÄNE
 ========================= */
 const STAR_PLANS = {
-  STAR_500: { price: 500, title: "Basic", code: "BV-BASIC10E" }, // NEU
   STAR_1500: { price: 1500, title: "VIP", code: "BV-VIP25EUR" },
   STAR_2500: { price: 2500, title: "Ultra", code: "BV-ULTRA50E" },
   STAR_5000: { price: 5000, title: "Ultra Pro", code: "BV-UPRO100E" },
@@ -24,7 +23,6 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
   await ctx.reply(
     `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐️ Basic – 500 Stars (10€)", "STAR_500")], // NEU
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
       [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
       [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
