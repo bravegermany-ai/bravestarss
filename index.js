@@ -3,14 +3,20 @@ import { createClient } from "@supabase/supabase-js";
 
 if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN fehlt");
 if (!process.env.SUPABASE_URL) throw new Error("SUPABASE_URL fehlt");
-if (!process.env.SUPABASE_SERVICE_KEY) throw new Error("SUPABASE_SERVICE_KEY fehlt");
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY) throw new Error("SUPABASE_SERVICE_ROLE_KEY fehlt");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-/* =========================
-   CODE GENERATOR
-========================= */
+/* ========================= STAR PLÄNE ========================= */
+const STAR_PLANS = {
+  STAR_1500: { price: 1500, title: "VIP", euros: 25 },
+  STAR_2500: { price: 2500, title: "Ultra", euros: 50 },
+  STAR_5000: { price: 5000, title: "Ultra Pro", euros: 100 },
+  STAR_7500: { price: 7500, title: "Ultimate", euros: 150 },
+};
+
+/* ========================= CODE GENERATOR ========================= */
 function generateCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "BV-";
@@ -20,19 +26,7 @@ function generateCode() {
   return code;
 }
 
-/* =========================
-   STAR PLÄNE
-========================= */
-const STAR_PLANS = {
-  STAR_1500: { price: 1500, title: "VIP" },
-  STAR_2500: { price: 2500, title: "Ultra" },
-  STAR_5000: { price: 5000, title: "Ultra Pro" },
-  STAR_7500: { price: 7500, title: "Ultimate 🔞" },
-};
-
-/* =========================
-   START / MAIN MENU
-========================= */
+/* ========================= START / MAIN MENU ========================= */
 const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
   const username = ctx.from.first_name || "User";
 
@@ -42,7 +36,7 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
       [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
       [Markup.button.callback("⭐️ Ultra Pro – 5.000 Stars", "STAR_5000")],
-      [Markup.button.callback("🔞 Ultimate – 7.500 Stars", "STAR_7500")]
+      [Markup.button.callback("⭐️ Ultimate – 7.500 Stars", "STAR_7500")],
     ])
   );
 };
@@ -54,9 +48,7 @@ bot.action("MAIN_MENU", async (ctx) => {
   await showMainMenu(ctx, "🏠 Hauptmenü");
 });
 
-/* =========================
-   STAR PAYMENT
-========================= */
+/* ========================= STAR PAYMENT ========================= */
 bot.action(/STAR_\d+/, async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
 
@@ -68,83 +60,69 @@ bot.action(/STAR_\d+/, async (ctx) => {
   const plan = STAR_PLANS[key];
 
   await ctx.replyWithInvoice({
-    title: `BRAVE – ${plan.title} – ${plan.price} Stars`,
-    description: `Zugang zum Plan: ${plan.title}`,
-    payload: JSON.stringify({ name: plan.title, price: plan.price / 100 }),
+    title: `${plan.title} – ${plan.price} Stars`,
+    description: `Lifetime Zugang zum ${plan.title} Paket`,
+    payload: JSON.stringify({ name: plan.title, price: plan.euros }),
     provider_token: "",
     currency: "XTR",
-    prices: [{ label: `${plan.price} Stars`, amount: plan.price }]
+    prices: [{ label: `${plan.price} Stars`, amount: plan.price }],
   });
 });
 
 bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
 
-/* =========================
-   SUCCESSFUL PAYMENT
-========================= */
+/* ========================= SUCCESSFUL PAYMENT ========================= */
 bot.on("successful_payment", async (ctx) => {
   const payment = ctx.message.successful_payment;
   const telegramUserId = String(ctx.from.id);
 
-  let planInfo = { name: "VIP", price: 0 };
+  let planInfo = { name: "VIP", price: 25 };
   try {
-    planInfo = JSON.parse(payment.invoice_payload);
+    if (payment.invoice_payload) {
+      planInfo = JSON.parse(payment.invoice_payload);
+    }
   } catch (e) {
     console.error("Payload parse error:", e);
   }
 
-  const priceInEuros = payment.total_amount / 100;
   const code = generateCode();
 
   // Code in Datenbank speichern
   const { error } = await supabase.from("redemption_codes").insert({
     code,
     plan_name: planInfo.name,
-    price: priceInEuros,
+    price: planInfo.price,
     telegram_user_id: telegramUserId,
   });
 
   if (error) {
-    console.error("DB error:", error);
-    await ctx.reply(
-      "⚠️ Zahlung erhalten, aber dein Code konnte nicht erstellt werden.\n\n" +
-      "Bitte erstelle ein Ticket in der App unter *Support*.",
-      { parse_mode: "Markdown" }
-    );
-    return;
+    console.error("DB Fehler:", error);
+    return await ctx.reply("❌ Fehler beim Erstellen deines Codes. Bitte kontaktiere den Support.");
   }
 
-  // Code an User senden
+  // Code + Anleitung senden
   await ctx.reply(
     `✅ *Zahlung erfolgreich!*\n\n` +
-    `🎁 Dein Einlöse-Code:\n\n` +
+    `🎁 *Dein Einlöse-Code:*\n\n` +
     `\`${code}\`\n\n` +
     `📋 Paket: *${planInfo.name}*\n` +
-    `💰 Betrag: ${priceInEuros}€`,
-    { parse_mode: "Markdown" }
-  );
-
-  // Ausführliche Anleitung
-  await ctx.reply(
+    `💰 Betrag: ${planInfo.price}€\n\n` +
     `📖 *So löst du deinen Code ein:*\n\n` +
-    `1️⃣ Öffne  Website\n` +
-    `3️⃣ Gehe zu *Profil* (oben rechts)\n` +
-    `4️⃣ Dort findest du die Karte *\"Code einlösen\"*\n` +
-    `5️⃣ Gib deinen Code ein: \`${code}\`\n` +
-    `6️⃣ Klick auf *\"Absenden\"*\n` +
-    `7️⃣ ✅ Dein ${planInfo.name} Paket ist sofort aktiv!\n\n` +
+    `1️⃣ Öffne unsere Website\n` +
+    `2️⃣ Gehe zu *Profil*\n` +
+    `3️⃣ Nutze *"Code einlösen"*\n` +
+    `4️⃣ Gib den Code ein\n` +
+    `5️⃣ Fertig! ✅ Dein Paket ist aktiv\n\n` +
     `⏱️ Code verfällt nicht\n` +
-    `❓ Problem? Erstelle ein Ticket in der App unter *Support*`,
+    `❓ Problem? Erstelle ein Ticket im Support`,
     { parse_mode: "Markdown" }
   );
 });
 
-/* =========================
-   START BOT
-========================= */
+/* ========================= START BOT ========================= */
 bot.launch({ dropPendingUpdates: true });
-console.log("🤖 BRAVE BOT GESTARTET");
+console.log("🤖 Bot gestartet");
 
 bot.catch((err, ctx) => {
-  console.error(`Fehler bei UpdateType ${ctx.updateType}:`, err);
+  console.error(`Fehler bei ${ctx.updateType}:`, err);
 });
