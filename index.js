@@ -21,7 +21,7 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
   const username = ctx.from.first_name || "User";
 
   await ctx.reply(
-    ${textPrefix}, ${username}!\n\nWähle deinen Plan:,
+    `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐️ VIP – 1.500 Stars", "STAR_1500")],
       [Markup.button.callback("⭐️ Ultra – 2.500 Stars", "STAR_2500")],
@@ -52,12 +52,12 @@ bot.action(/STAR_\d+/, async (ctx) => {
   const plan = STAR_PLANS[key];
 
   await ctx.replyWithInvoice({
-    title: SKANDAL – ${plan.title} – ${plan.price} Stars,
-    description: Zugang zum Plan: ${plan.title},
-    payload: PLAN_${key},
+    title: `SKANDAL – ${plan.title} – ${plan.price} Stars`,
+    description: `Zugang zum Plan: ${plan.title}`,
+    payload: `PLAN_${key}`,
     provider_token: "", // ⭐ HIER DEIN TELEGRAM PROVIDER TOKEN EINTRAGEN
     currency: "XTR",
-    prices: [{ label: ${plan.price} Stars, amount: plan.price }]
+    prices: [{ label: `${plan.price} Stars`, amount: plan.price }]
   });
 });
 
@@ -76,15 +76,20 @@ bot.on("successful_payment", async (ctx) => {
   if (!plan) return;
 
   await ctx.reply(
-    ✅ *Zahlung erfolgreich!*\n\n +
-    🎉 Danke für deinen Kauf, ${user}!\n\n +
-    📦 *Dein Plan:* ${plan.title}\n\n +
-    🌐 *So erhältst du deinen Zugang:*\n +
-    1️⃣ Gehe auf dein Profil auf der Website\n +
-    2️⃣ Öffne den Bereich *„Einlösen“*\n +
-    3️⃣ Gib folgenden Code ein:\n\n +
-    🔑 \`${plan.code}\`\n\n +
-    🔥 Danach kannst du deinen Inhalt genießen!,
+    `✅ *Zahlung erfolgreich!*
+
+🎉 Danke für deinen Kauf, ${user}!
+
+📦 *Dein Plan:* ${plan.title}
+
+🌐 *So erhältst du deinen Zugang:*
+1️⃣ Gehe auf dein Profil auf der Website
+2️⃣ Öffne den Bereich *„Einlösen“*
+3️⃣ Gib folgenden Code ein:
+
+🔑 \`${plan.code}\`
+
+🔥 Danach kannst du deinen Inhalt genießen!`,
     { parse_mode: "Markdown" }
   );
 });
