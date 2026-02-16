@@ -3,10 +3,6 @@ import { Telegraf, Markup, session } from "telegraf";
 if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN fehlt");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-
-/* =========================
-   SESSION MIDDLEWARE
-========================= */
 bot.use(session());
 
 /* =========================
@@ -35,7 +31,7 @@ function generateCode(length = 8) {
 ========================= */
 const showMainMenu = async (ctx) => {
   await ctx.reply(
-    "✨ Wähle dein Star-Paket:",
+    "✨ Wähle dein Star‑Paket:",
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ 1500 Stars – 25 €", "STAR_1500")],
       [Markup.button.callback("⭐ 2500 Stars – 50 €", "STAR_2500")],
@@ -47,20 +43,40 @@ const showMainMenu = async (ctx) => {
 bot.start(showMainMenu);
 
 /* =========================
-   BUTTON HANDLER (TEST-MODUS)
+   PAYMENT HANDLER
 ========================= */
 bot.action(/STAR_\d+/, async (ctx) => {
-  await ctx.answerCbQuery(); // Feedback beim Klick
+  await ctx.answerCbQuery();
 
   const key = ctx.match[0];
   const plan = STAR_PLANS[key];
+  if (!plan) return ctx.reply("❌ Ungültiger Plan");
+
+  await ctx.replyWithInvoice({
+    title: plan.title,
+    description: `Bezahlung mit ⭐ Telegram Stars`,
+    payload: `STARS_${key}`, 
+    provider_token: "DEIN_PROVIDER_TOKEN_HIER", // 👉 HIER echten Token eintragen
+    currency: "EUR",
+    prices: [{ label: plan.label, amount: plan.price }]
+  });
+});
+
+/* =========================
+   PRE CHECKOUT
+========================= */
+bot.on("pre_checkout_query", (ctx) => ctx.answerPreCheckoutQuery(true));
+
+/* =========================
+   SUCCESSFUL PAYMENT
+========================= */
+bot.on("successful_payment", async (ctx) => {
   const voucherCode = generateCode();
 
-  // Nachricht an User
   await ctx.reply(
-    `✅ Du hast das Paket ${plan.title} gewählt (Test-Modus)\n\n` +
+    `✅ Zahlung erfolgreich!\n\n` +
     `🎟 Dein Code: ${voucherCode}\n\n` +
-    `📩 Bitte sende nun deinen Snapchat-Benutzernamen zusammen mit diesem Code an @SkandalGermany6.`
+    `📩 Bitte sende jetzt deinen Snapchat‑Benutzernamen zusammen mit diesem Code an @SkandalGermany6.`
   );
 });
 
