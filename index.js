@@ -1,21 +1,27 @@
-import { Telegraf, Markup } from "telegraf";
+import { Telegraf, Markup, session } from "telegraf";
 
 if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN fehlt");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 /* =========================
+   SESSION MIDDLEWARE
+========================= */
+bot.use(session());
+
+/* =========================
    STAR PLÄNE
 ========================= */
 const STAR_PLANS = {
-  STAR_1500: { stars: 1500, title: "⭐ 1500 Stars" },
-  STAR_5000: { stars: 5000, title: "⭐ 5000 Stars" },
+  STAR_1500: { stars: 1500, title: "⭐ 1500 Stars", price: 2500, label: "25 €" },
+  STAR_2500: { stars: 2500, title: "⭐ 2500 Stars", price: 5000, label: "50 €" },
+  STAR_5000: { stars: 5000, title: "⭐ 5000 Stars", price: 10000, label: "100 €" }
 };
 
 /* =========================
    RANDOM CODE GENERATOR
 ========================= */
-function generateCode(length = 10) {
+function generateCode(length = 8) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
   for (let i = 0; i < length; i++) {
@@ -32,6 +38,7 @@ const showMainMenu = async (ctx) => {
     "✨ Wähle dein Star-Paket:",
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ 1500 Stars", "STAR_1500")],
+      [Markup.button.callback("⭐ 2500 Stars", "STAR_2500")],
       [Markup.button.callback("⭐ 5000 Stars", "STAR_5000")]
     ])
   );
@@ -54,10 +61,10 @@ bot.action(/STAR_\d+/, async (ctx) => {
     title: plan.title,
     description: `Bezahlung mit ⭐ Telegram Stars`,
     payload: `STARS_${key}`,
-    provider_token: "", // ⭐ MUSS leer sein
-    currency: "XTR",
+    provider_token: "",
+    currency: "EUR",
     prices: [
-      { label: `⭐ ${plan.stars} Stars`, amount: plan.stars }
+      { label: plan.label, amount: plan.price }
     ]
   });
 });
@@ -75,11 +82,11 @@ bot.on("pre_checkout_query", (ctx) =>
 bot.on("successful_payment", async (ctx) => {
   const voucherCode = generateCode();
 
+  // Nachricht an User
   await ctx.reply(
     `✅ Zahlung erfolgreich!\n\n` +
-    `🎟 Dein Code:\n` +
-    `🔑 ${voucherCode}\n\n` +
-    `📩 Sende diesen Code an @SkandalGermany6`
+    `🎟 Dein Code: ${voucherCode}\n\n` +
+    `📩 Bitte sende nun deinen Snapchat-Benutzernamen **zusammen mit diesem Code** an @SkandalGermany6, um Zugriff zu erhalten.`
   );
 });
 
