@@ -32,7 +32,7 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ 1500 Stars – 25 €", "STAR_1500")],
       [Markup.button.callback("⭐ 2500 Stars – 50 €", "STAR_2500")],
-      [Markup.button.callback("⭐ 5000 Stars – 120 €", "STAR_5000")] // ✅ Preis geändert
+      [Markup.button.callback("⭐ 5000 Stars – 120 €", "STAR_5000")]
     ])
   );
 };
@@ -47,9 +47,9 @@ bot.action("MAIN_MENU", async (ctx) => {
    STAR PAYMENTS
 ========================= */
 const STAR_PLANS = {
-  STAR_1500: { stars: 1500, title: "⭐ 1500 Stars", price: 1500, label: "1500 Stars" },
-  STAR_2500: { stars: 2500, title: "⭐ 2500 Stars", price: 2500, label: "2500 Stars" },
-  STAR_5000: { stars: 5000, title: "⭐ 5000 Stars", price: 12000, label: "5000 Stars" } // ✅ Preis angepasst
+  STAR_1500: { stars: 1500, title: "⭐ 1500 Stars", amount: 1500, label: "1500 Stars" },
+  STAR_2500: { stars: 2500, title: "⭐ 2500 Stars", amount: 2500, label: "2500 Stars" },
+  STAR_5000: { stars: 5000, title: "⭐ 5000 Stars", amount: 5000, label: "5000 Stars" } // ✅ richtig auf 5000
 };
 
 bot.action(/STAR_\d+/, async (ctx) => {
@@ -65,7 +65,7 @@ bot.action(/STAR_\d+/, async (ctx) => {
     payload: `STARS_${key}_${ctx.from.id}`,
     provider_token: "DEIN_PROVIDER_TOKEN_HIER", // hier echten Token einfügen
     currency: "XTR",
-    prices: [{ label: plan.label, amount: plan.price }]
+    prices: [{ label: plan.label, amount: plan.amount }]
   });
 });
 
