@@ -1,18 +1,13 @@
-import { Telegraf, Markup, session } from "telegraf";
+import { Telegraf, Markup } from "telegraf";
 
 if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN fehlt");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-bot.use(session());
 
 /* =========================
-   STAR PLÄNE
+   BUTTONS
 ========================= */
-const STAR_PLANS = {
-  STAR_1500: { stars: 1500, title: "⭐ 1500 Stars", price: 2500, label: "25 €" },
-  STAR_2500: { stars: 2500, title: "⭐ 2500 Stars", price: 5000, label: "50 €" },
-  STAR_5000: { stars: 5000, title: "⭐ 5000 Stars", price: 10000, label: "100 €" }
-};
+const MAIN_MENU_BUTTON = Markup.button.callback("🏠 Hauptmenü", "MAIN_MENU");
 
 /* =========================
    RANDOM CODE GENERATOR
@@ -27,37 +22,49 @@ function generateCode(length = 8) {
 }
 
 /* =========================
-   MAIN MENU
+   START / MAIN MENU
 ========================= */
-const showMainMenu = async (ctx) => {
+const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
+  const username = ctx.from.first_name || "User";
+
   await ctx.reply(
-    "✨ Wähle dein Star‑Paket:",
+    `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
       [Markup.button.callback("⭐ 1500 Stars – 25 €", "STAR_1500")],
       [Markup.button.callback("⭐ 2500 Stars – 50 €", "STAR_2500")],
-      [Markup.button.callback("⭐ 5000 Stars – 100 €", "STAR_5000")]
+      [Markup.button.callback("⭐ 5000 Stars – 120 €", "STAR_5000")] // ✅ Preis geändert
     ])
   );
 };
 
-bot.start(showMainMenu);
+bot.start((ctx) => showMainMenu(ctx));
+bot.action("MAIN_MENU", async (ctx) => {
+  await ctx.answerCbQuery();
+  await showMainMenu(ctx, "🏠 Hauptmenü");
+});
 
 /* =========================
-   PAYMENT HANDLER
+   STAR PAYMENTS
 ========================= */
-bot.action(/STAR_\d+/, async (ctx) => {
-  await ctx.answerCbQuery();
+const STAR_PLANS = {
+  STAR_1500: { stars: 1500, title: "⭐ 1500 Stars", price: 1500, label: "1500 Stars" },
+  STAR_2500: { stars: 2500, title: "⭐ 2500 Stars", price: 2500, label: "2500 Stars" },
+  STAR_5000: { stars: 5000, title: "⭐ 5000 Stars", price: 12000, label: "5000 Stars" } // ✅ Preis angepasst
+};
 
+bot.action(/STAR_\d+/, async (ctx) => {
+  await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
   const key = ctx.match[0];
   const plan = STAR_PLANS[key];
+
   if (!plan) return ctx.reply("❌ Ungültiger Plan");
 
   await ctx.replyWithInvoice({
     title: plan.title,
-    description: `Bezahlung mit ⭐ Telegram Stars`,
-    payload: `STARS_${key}`, 
-    provider_token: "DEIN_PROVIDER_TOKEN_HIER", // 👉 HIER echten Token eintragen
-    currency: "EUR",
+    description: `Bezahlung mit ${plan.stars} Telegram-Stars`,
+    payload: `STARS_${key}_${ctx.from.id}`,
+    provider_token: "DEIN_PROVIDER_TOKEN_HIER", // hier echten Token einfügen
+    currency: "XTR",
     prices: [{ label: plan.label, amount: plan.price }]
   });
 });
@@ -76,7 +83,7 @@ bot.on("successful_payment", async (ctx) => {
   await ctx.reply(
     `✅ Zahlung erfolgreich!\n\n` +
     `🎟 Dein Code: ${voucherCode}\n\n` +
-    `📩 Bitte sende jetzt deinen Snapchat‑Benutzernamen zusammen mit diesem Code an @SkandalGermany6.`
+    `📩 Bitte sende jetzt deinen Snapchat-Benutzernamen zusammen mit diesem Code an @SkandalGermany6.`
   );
 });
 
@@ -84,8 +91,14 @@ bot.on("successful_payment", async (ctx) => {
    START BOT
 ========================= */
 bot.launch({ dropPendingUpdates: true });
-console.log("🚀 BOT GESTARTET");
+console.log("🤖 BOT GESTARTET");
 
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
+
+/* =========================
+   ERROR HANDLER
+========================= */
 bot.catch((err, ctx) => {
-  console.error(`Fehler bei ${ctx.updateType}:`, err);
+  console.error(`Fehler bei UpdateType ${ctx.updateType}:`, err);
 });
