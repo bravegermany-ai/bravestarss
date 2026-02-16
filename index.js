@@ -47,45 +47,20 @@ const showMainMenu = async (ctx) => {
 bot.start(showMainMenu);
 
 /* =========================
-   STARS PAYMENT
+   BUTTON HANDLER (TEST-MODUS)
 ========================= */
 bot.action(/STAR_\d+/, async (ctx) => {
-  await ctx.answerCbQuery();
+  await ctx.answerCbQuery(); // Feedback beim Klick
 
   const key = ctx.match[0];
   const plan = STAR_PLANS[key];
-
-  if (!plan) return ctx.reply("❌ Ungültiger Plan");
-
-  await ctx.replyWithInvoice({
-    title: plan.title,
-    description: `Bezahlung mit ⭐ Telegram Stars`,
-    payload: `STARS_${key}`,
-    provider_token: "",
-    currency: "EUR",
-    prices: [
-      { label: plan.label, amount: plan.price }
-    ]
-  });
-});
-
-/* =========================
-   PRE CHECKOUT
-========================= */
-bot.on("pre_checkout_query", (ctx) =>
-  ctx.answerPreCheckoutQuery(true)
-);
-
-/* =========================
-   SUCCESS
-========================= */
-bot.on("successful_payment", async (ctx) => {
   const voucherCode = generateCode();
 
+  // Nachricht an User
   await ctx.reply(
-    `✅ Zahlung erfolgreich!\n\n` +
+    `✅ Du hast das Paket ${plan.title} gewählt (Test-Modus)\n\n` +
     `🎟 Dein Code: ${voucherCode}\n\n` +
-    `📩 Bitte sende nun deinen Snapchat-Benutzernamen **zusammen mit diesem Code** an @SkandalGermany6, um Zugriff zu erhalten.`
+    `📩 Bitte sende nun deinen Snapchat-Benutzernamen zusammen mit diesem Code an @SkandalGermany6.`
   );
 });
 
