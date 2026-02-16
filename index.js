@@ -5,8 +5,8 @@ if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN fehlt");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const STAR_PLANS = {
-  STAR_1500: { price: 1500, title: "1500 Stars" },
-  STAR_2500: { price: 2500, title: "2500 Stars" },
+  STAR_1500: { price: 25, title: "1500 Stars (25€)" },
+  STAR_5000: { price: 120, title: "5000 Stars (120€)" },
 };
 
 /* =========================
@@ -28,8 +28,8 @@ const showMainMenu = async (ctx) => {
   await ctx.reply(
     `Wähle eine Option:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("1500", "STAR_1500")],
-      [Markup.button.callback("2500", "STAR_2500")]
+      [Markup.button.callback("1500 Sterne – 25€", "STAR_1500")],
+      [Markup.button.callback("5000 Sterne – 120€", "STAR_5000")]
     ])
   );
 };
@@ -54,8 +54,10 @@ bot.action(/STAR_\d+/, async (ctx) => {
     description: plan.title,
     payload: `PLAN_${key}`,
     provider_token: "",
-    currency: "XTR",
-    prices: [{ label: `${plan.price} Stars`, amount: plan.price }]
+    currency: "EUR",
+    prices: [
+      { label: plan.title, amount: plan.price * 100 } // Euro in Cent
+    ]
   });
 });
 
