@@ -37,9 +37,9 @@ const showMainMenu = async (ctx) => {
   await ctx.reply(
     "✨ Wähle dein Star-Paket:",
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ 1500 Stars", "STAR_1500")],
-      [Markup.button.callback("⭐ 2500 Stars", "STAR_2500")],
-      [Markup.button.callback("⭐ 5000 Stars", "STAR_5000")]
+      [Markup.button.callback("⭐ 1500 Stars – 25 €", "STAR_1500")],
+      [Markup.button.callback("⭐ 2500 Stars – 50 €", "STAR_2500")],
+      [Markup.button.callback("⭐ 5000 Stars – 100 €", "STAR_5000")]
     ])
   );
 };
@@ -82,7 +82,6 @@ bot.on("pre_checkout_query", (ctx) =>
 bot.on("successful_payment", async (ctx) => {
   const voucherCode = generateCode();
 
-  // Nachricht an User
   await ctx.reply(
     `✅ Zahlung erfolgreich!\n\n` +
     `🎟 Dein Code: ${voucherCode}\n\n` +
