@@ -30,16 +30,15 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
   await ctx.reply(
     `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ 500 Stars – Spoofing", "STAR_500_SPOOF")],
-      [Markup.button.callback("⭐ 500 Stars – Privat Bereich", "STAR_500_PRIVATE")],
-      [Markup.button.callback("⭐ 1500 Stars – 25 €", "STAR_1500")],
+      [Markup.button.callback("⭐ 1250 Stars – 25 €", "STAR_1250")],
       [Markup.button.callback("⭐ 2500 Stars – 50 €", "STAR_2500")],
-      [Markup.button.callback("⭐ 5000 Stars – 120 €", "STAR_5000")]
+      [Markup.button.callback("⭐ 7500 Stars – 120 €", "STAR_7500")]
     ])
   );
 };
 
 bot.start((ctx) => showMainMenu(ctx));
+
 bot.action("MAIN_MENU", async (ctx) => {
   await ctx.answerCbQuery();
   await showMainMenu(ctx, "🏠 Hauptmenü");
@@ -49,23 +48,11 @@ bot.action("MAIN_MENU", async (ctx) => {
    STAR PAYMENTS
 ========================= */
 const STAR_PLANS = {
-  STAR_500_SPOOF: {
-    stars: 500,
-    title: "⭐ 500 Stars – Spoofing",
-    amount: 500,
-    label: "500 Stars Spoofing"
-  },
-  STAR_500_PRIVATE: {
-    stars: 500,
-    title: "⭐ 500 Stars – Privat Bereich",
-    amount: 500,
-    label: "500 Stars Privat Bereich"
-  },
-  STAR_1500: {
-    stars: 1500,
-    title: "⭐ 1500 Stars",
-    amount: 1500,
-    label: "1500 Stars"
+  STAR_1250: {
+    stars: 1250,
+    title: "⭐ 1250 Stars",
+    amount: 1250,
+    label: "1250 Stars"
   },
   STAR_2500: {
     stars: 2500,
@@ -73,11 +60,11 @@ const STAR_PLANS = {
     amount: 2500,
     label: "2500 Stars"
   },
-  STAR_5000: {
-    stars: 5000,
-    title: "⭐ 5000 Stars",
-    amount: 5000,
-    label: "5000 Stars"
+  STAR_7500: {
+    stars: 7500,
+    title: "⭐ 7500 Stars",
+    amount: 7500,
+    label: "7500 Stars"
   }
 };
 
