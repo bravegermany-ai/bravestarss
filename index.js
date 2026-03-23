@@ -28,11 +28,11 @@ const showMainMenu = async (ctx, textPrefix = "👋 Willkommen") => {
   const username = ctx.from.first_name || "User";
 
   await ctx.reply(
-    `${textPrefix}, ${username}!\n\nWähle deinen Plan:`,
+    `${textPrefix}, ${username}!\n\n👻 Snap Tool\n\nWähle deinen Plan:`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("⭐ 1250 Stars – 25 €", "STAR_1250")],
-      [Markup.button.callback("⭐ 2500 Stars – 50 €", "STAR_2500")],
-      [Markup.button.callback("⭐ 7500 Stars – 120 €", "STAR_7500")]
+      [Markup.button.callback("👻 1 Account — 1.250 ⭐", "PLAN_1")],
+      [Markup.button.callback("🔥 3 Accounts — 2.500 ⭐", "PLAN_3")],
+      [Markup.button.callback("💎 Lifetime — 7.500 ⭐", "PLAN_LIFE")]
     ])
   );
 };
@@ -48,27 +48,27 @@ bot.action("MAIN_MENU", async (ctx) => {
    STAR PAYMENTS
 ========================= */
 const STAR_PLANS = {
-  STAR_1250: {
+  PLAN_1: {
     stars: 1250,
-    title: "⭐ 1250 Stars",
+    title: "👻 1 Account",
     amount: 1250,
-    label: "1250 Stars"
+    label: "1 Account"
   },
-  STAR_2500: {
+  PLAN_3: {
     stars: 2500,
-    title: "⭐ 2500 Stars",
+    title: "🔥 3 Accounts",
     amount: 2500,
-    label: "2500 Stars"
+    label: "3 Accounts"
   },
-  STAR_7500: {
+  PLAN_LIFE: {
     stars: 7500,
-    title: "⭐ 7500 Stars",
+    title: "💎 Lifetime",
     amount: 7500,
-    label: "7500 Stars"
+    label: "Lifetime Zugang"
   }
 };
 
-bot.action(/STAR_.+/, async (ctx) => {
+bot.action(/PLAN_.+/, async (ctx) => {
   await ctx.answerCbQuery("💳 Zahlung wird vorbereitet...");
   const key = ctx.match[0];
   const plan = STAR_PLANS[key];
